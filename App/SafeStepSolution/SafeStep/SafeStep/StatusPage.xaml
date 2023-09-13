@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="SafeStep.StatusPage"
+             NavigationPage.HasNavigationBar="False">
+
+    <StackLayout Spacing="1">
+        <!-- Header -->
+        <StackLayout>
+            <Frame BackgroundColor="#2196F3" Padding="20" CornerRadius="0">
+                <Label Text="Status" HorizontalTextAlignment="Center"
+                       VerticalTextAlignment="Start" TextColor="White" FontSize="36"/>
+            </Frame>
+        </StackLayout>
+        <!-- Current Status -->
+        <Label Text="WIP" FontSize="Title" HorizontalTextAlignment="Center"/>
+    </StackLayout>
+
+
+
+
+
+</ContentPage>
