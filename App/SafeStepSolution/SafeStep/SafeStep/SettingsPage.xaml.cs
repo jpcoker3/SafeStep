@@ -13,7 +13,11 @@ namespace SafeStep
     {
         public SettingsPage()
         {
+
             InitializeComponent();
+
         }
+ 
     }
+
 }

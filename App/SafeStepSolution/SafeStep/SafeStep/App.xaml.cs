@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Sockets;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
@@ -24,5 +25,7 @@ namespace SafeStep
         protected override void OnResume()
         {
         }
+
     }
+
 }

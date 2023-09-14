@@ -12,12 +12,18 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="NewFolder1\**" />
-    <Compile Remove="NewFolder\**" />
-    <EmbeddedResource Remove="NewFolder1\**" />
-    <EmbeddedResource Remove="NewFolder\**" />
-    <None Remove="NewFolder1\**" />
-    <None Remove="NewFolder\**" />
+    <Compile Remove="CustomTabbedPage.xaml.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Remove="CustomTabbedPage.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="locate.png" />
+    <None Remove="pair.png" />
+    <None Remove="settings.png" />
+    <None Remove="status.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -38,5 +44,9 @@
     <EmbeddedResource Update="StatusPage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="NewFolder\" />
   </ItemGroup>
 </Project>
