@@ -27,25 +27,29 @@ namespace SafeStep
         // Navigate to settings page.
         async void NavigateToSettings(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NavigationPage(new SettingsPage()));
+            NavigationPage.SetHasNavigationBar(this, false);
+            await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()));
         }
 
         // Navigate to status page.
         async void NavigateToStatus(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NavigationPage(new StatusPage()));
+            NavigationPage.SetHasNavigationBar(this, false);
+            await Navigation.PushModalAsync(new NavigationPage(new StatusPage()));
         }
 
         // Navigate to Locate page.
         async void NavigateToLocate(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NavigationPage(new LocatePage()));
+            NavigationPage.SetHasNavigationBar(this, false);
+            await Navigation.PushModalAsync(new NavigationPage(new LocatePage()));
         }
 
         // Navigate to settings page.
         async void NavigateToPair(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new NavigationPage(new PairPage()));
+            NavigationPage.SetHasNavigationBar(this, false);
+            await Navigation.PushModalAsync(new NavigationPage(new PairPage()));
         }
 
 

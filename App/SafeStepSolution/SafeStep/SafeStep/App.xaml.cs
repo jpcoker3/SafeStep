@@ -11,7 +11,7 @@ namespace SafeStep
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            MainPage = new NavigationPage(new LocatePage());
         }
 
         protected override void OnStart()
@@ -25,6 +25,7 @@ namespace SafeStep
         protected override void OnResume()
         {
         }
+
 
     }
 

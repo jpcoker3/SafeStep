@@ -2,30 +2,52 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SafeStep.SettingsPage"
-             NavigationPage.HasNavigationBar="False"  
+             Shell.NavBarIsVisible="False"  
              >
 
     <NavigationPage.TitleView>
         <StackLayout>
-            <Label Text="Safe Step"
+            <Label Text="Settings"
                    HorizontalOptions="CenterAndExpand"
                    FontSize="40"
                    TextColor="White"/>
 
         </StackLayout>
     </NavigationPage.TitleView>
-    
-    <StackLayout Spacing="1">
-        <!-- Header -->
-        <StackLayout>
-            <Frame BackgroundColor="#2196F3" Padding="20" CornerRadius="0">
-                <Label Text="Settings" HorizontalTextAlignment="Center"
-                       VerticalTextAlignment="Start" TextColor="White" FontSize="36"/>
-            </Frame>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Content -->
+        <StackLayout Grid.Row="0">
+            <Label Text="Hello" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
+            <!-- Your current content here -->
         </StackLayout>
-        <!-- Current Status -->
-        <Label Text="WIP" FontSize="Title" HorizontalTextAlignment="Center"/>
-    </StackLayout>
+
+        <!-- Bottom Navigation Bar -->
+        <StackLayout x:Name="NavBar" Grid.Row="1" Orientation="Horizontal" BackgroundColor="#2195f3" WidthRequest="50" HorizontalOptions="CenterAndExpand" HeightRequest="50">
+            <ContentView x:Name ="Status" WidthRequest="50">
+                <!-- Adjust the width as needed -->
+                <ImageButton Clicked="NavigateToStatus" Source="status.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            </ContentView>
+            <ContentView x:Name ="Locate" WidthRequest="50">
+                <!-- Adjust the width as needed -->
+                <ImageButton Clicked="NavigateToLocate" Source="locate.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            </ContentView>
+            <ContentView x:Name ="Pair" WidthRequest="50">
+                <!-- Adjust the width as needed -->
+                <ImageButton Clicked="NavigateToPair" Source="pair.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            </ContentView>
+            <ContentView x:Name ="Settings" WidthRequest="50">
+                <!-- Adjust the width as needed -->
+                <ImageButton Clicked="NavigateToSettings" Source="settings.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            </ContentView>
+        </StackLayout>
+
+    </Grid>
 
 
 
