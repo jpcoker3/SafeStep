@@ -3,6 +3,11 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="SafeStep.App">
     <Application.Resources>
+        <Style x:Key="NavigationBarIconStyle" TargetType="ImageButton">
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
 
     </Application.Resources>
 </Application>

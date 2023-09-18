@@ -27,24 +27,25 @@
         </StackLayout>
 
         <!-- Bottom Navigation Bar -->
-        <StackLayout x:Name="NavBar" Grid.Row="1" Orientation="Horizontal" BackgroundColor="#2195f3" WidthRequest="50" HorizontalOptions="CenterAndExpand" HeightRequest="50">
-            <ContentView x:Name ="Status" WidthRequest="50">
-                <!-- Adjust the width as needed -->
-                <ImageButton Clicked="NavigateToStatus" Source="status.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+        <FlexLayout x:Name="NavBar" Grid.Row="1" Direction="Row" JustifyContent="Center" AlignItems="Center" BackgroundColor="#2195f3" HeightRequest="50" >
+            <ContentView x:Name="Status" WidthRequest="50">
+                <ImageButton Clicked="NavigateToStatus" Source="status.png" 
+                 Style="{StaticResource NavigationBarIconStyle}" />
             </ContentView>
-            <ContentView x:Name ="Locate" WidthRequest="50">
-                <!-- Adjust the width as needed -->
-                <ImageButton Clicked="NavigateToLocate" Source="locate.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+
+            <ContentView x:Name="Locate" WidthRequest="50">
+                <ImageButton Clicked="NavigateToLocate" Source="locate.png" 
+                 Style="{StaticResource NavigationBarIconStyle}" />
             </ContentView>
-            <ContentView x:Name ="Pair" WidthRequest="50">
-                <!-- Adjust the width as needed -->
-                <ImageButton Clicked="NavigateToPair" Source="pair.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            <ContentView x:Name="Pair" WidthRequest="50">
+                <ImageButton Clicked="NavigateToPair" Source="pair.png" 
+                Style="{StaticResource NavigationBarIconStyle}" />
             </ContentView>
-            <ContentView x:Name ="Settings" WidthRequest="50">
-                <!-- Adjust the width as needed -->
-                <ImageButton Clicked="NavigateToSettings" Source="settings.png" Aspect="AspectFit" BackgroundColor="transparent"/>
+            <ContentView x:Name="Settings" WidthRequest="50">
+                <ImageButton Clicked="NavigateToSettings" Source="settings.png" 
+                 Style="{StaticResource NavigationBarIconStyle}" />
             </ContentView>
-        </StackLayout>
+        </FlexLayout>
     </Grid>
 
 

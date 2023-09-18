@@ -19,7 +19,7 @@ namespace SafeStep
             var displayInfo = DeviceDisplay.MainDisplayInfo;
             var screenWidth = displayInfo.Width;
             var screenHeight = displayInfo.Height;
-            var NavBarheight = screenHeight / 20;
+            var NavBarheight = screenHeight / 25;
             var buttonWidth = screenWidth / 13;
 
             Status.WidthRequest = buttonWidth;
