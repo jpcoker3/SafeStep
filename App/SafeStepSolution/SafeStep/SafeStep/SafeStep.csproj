@@ -32,6 +32,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Update="CreditsPage.xaml">
+      <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
+    </EmbeddedResource>
     <EmbeddedResource Update="LocatePage.xaml">
       <Generator>MSBuild:UpdateDesignTimeXaml</Generator>
     </EmbeddedResource>

@@ -23,15 +23,23 @@
 
         <!-- Content -->
         <StackLayout Grid.Row="0">
-            <Label Text="Hello" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
-            <!-- Your current content here -->
+            <!-- Push Notifications -->
+            <Grid HorizontalOptions="CenterAndExpand">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <!-- For the label -->
+                    <ColumnDefinition Width="Auto" />
+                    <!-- For the switch -->
+                </Grid.ColumnDefinitions>
 
-            <!-- Push Notifications Toggle -->
-            <Switch x:Name="PushNotificationsToggle" IsToggled="false" HorizontalOptions="Center" VerticalOptions="Center" />
+                <Label Text="Push Notifications" VerticalOptions="Center" FontSize="30" />
+                <Switch x:Name="PushNotificationsToggle" IsToggled="false" Grid.Column="1" HorizontalOptions="Start" VerticalOptions="Center" />
+            </Grid>
 
             <!-- Credits Button -->
-            <Button Text="Credits" Clicked="NavigateToSettings" HorizontalOptions="Center" VerticalOptions="Center" />
+            <Button Text="Credits" Clicked="NavigateToCredits" HorizontalOptions="Center" VerticalOptions="Center" />
         </StackLayout>
+
 
 
         <!-- Bottom Navigation Bar -->

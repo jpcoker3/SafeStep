@@ -22,7 +22,7 @@
 
         <!-- Content -->
         <StackLayout Grid.Row="0">
-            <Label Text="Hello" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
+            <Label Text="Use this page to see the status of the shoes! WIP" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
             <!-- Your current content here -->
         </StackLayout>
 

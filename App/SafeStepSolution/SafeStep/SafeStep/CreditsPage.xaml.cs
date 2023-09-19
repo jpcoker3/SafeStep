@@ -9,14 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace SafeStep
 {
-    [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class SettingsPage : ContentPage
-    {
-        public SettingsPage()
-        {
-
-            InitializeComponent();
-
+	[XamlCompilation(XamlCompilationOptions.Compile)]
+	public partial class CreditsPage : ContentPage
+	{
+		public CreditsPage ()
+		{
+			InitializeComponent ();
             var displayInfo = DeviceDisplay.MainDisplayInfo;
             var screenWidth = displayInfo.Width;
             var screenHeight = displayInfo.Height;
@@ -30,17 +28,7 @@ namespace SafeStep
 
             NavBar.WidthRequest = screenWidth;
             NavBar.HeightRequest = NavBarheight;
-
         }
-
-        // Navigate to Credits page.
-        async void NavigateToCredits(object sender, EventArgs e)
-        {
-            NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new CreditsPage()));
-        }
-
-
         // Navigate to settings page.
         async void NavigateToSettings(object sender, EventArgs e)
         {
@@ -68,8 +56,5 @@ namespace SafeStep
             NavigationPage.SetHasNavigationBar(this, false);
             await Navigation.PushModalAsync(new NavigationPage(new PairPage()));
         }
-
-
     }
-
 }

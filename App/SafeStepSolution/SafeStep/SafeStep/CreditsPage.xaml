@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="SafeStep.PairPage"
-             Shell.NavBarIsVisible="False">
-
+             x:Class="SafeStep.CreditsPage">
+    
+    
     <NavigationPage.TitleView>
         <StackLayout>
-            <Label Text="Pair"
-           HorizontalOptions="CenterAndExpand"
-           FontSize="40"
-           TextColor="White"/>
+            <Label Text="Credits"
+                   HorizontalOptions="CenterAndExpand"
+                   FontSize="40"
+                   TextColor="White"/>
 
         </StackLayout>
     </NavigationPage.TitleView>
@@ -22,9 +22,17 @@
 
         <!-- Content -->
         <StackLayout Grid.Row="0">
-            <Label Text="Here is where you will be able to see the pair status of the shoes! WIP" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
-            <!-- Your current content here -->
+            <!--Credits-->
+            <Label Text="Joseph Coker" FontSize="50" HorizontalOptions="CenterAndExpand"></Label>
+            <Label Text="Emily Miller" FontSize="50" HorizontalOptions="CenterAndExpand"></Label>
+            <Label Text="Ryan Harper" FontSize="50" HorizontalOptions="CenterAndExpand"></Label>
+            <Label Text="Colby Stevens" FontSize="50" HorizontalOptions="CenterAndExpand"></Label>
+
+            
+            
         </StackLayout>
+
+
 
         <!-- Bottom Navigation Bar -->
         <FlexLayout x:Name="NavBar" Grid.Row="1" Direction="Row" JustifyContent="Center" AlignItems="Center" BackgroundColor="#2195f3" HeightRequest="50" >
@@ -46,9 +54,9 @@
                  Style="{StaticResource NavigationBarIconStyle}" />
             </ContentView>
         </FlexLayout>
+
+
     </Grid>
-
-
 
 
 
