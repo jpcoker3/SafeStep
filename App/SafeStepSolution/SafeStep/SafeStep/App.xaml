@@ -8,6 +8,5 @@
             <Setter Property="BackgroundColor" Value="Transparent" />
             <Setter Property="Padding" Value="20" />
         </Style>
-
     </Application.Resources>
 </Application>
