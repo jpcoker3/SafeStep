@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SafeStep.Utilities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -68,8 +69,25 @@ namespace SafeStep
             NavigationPage.SetHasNavigationBar(this, false);
             await Navigation.PushModalAsync(new NavigationPage(new PairPage()));
         }
+        async void ScheduleNotificationButtonClicked(object sender, EventArgs e)
+        {
+            // Call the ScheduleLocalNotification method to schedule the notification.
+            ScheduleLocalNotification();
+        }
+        private void ScheduleLocalNotification()
+        {
+            // Get an instance of the notification service through DependencyService
+            var notificationService = DependencyService.Get<INotificationService>();
 
+            // Define notification details
+            string title = "Notification Title";
+            string message = "This is the notification message.";
+            int notificationId = 1; // A unique ID for the notification
+            DateTime notifyTime = DateTime.Now.AddSeconds(10); // Set the time when the notification should appear
 
+            // Call the ShowNotification method to schedule the notification
+            notificationService?.ShowNotification(title, message, notificationId, notifyTime);
+        }
     }
 
 }

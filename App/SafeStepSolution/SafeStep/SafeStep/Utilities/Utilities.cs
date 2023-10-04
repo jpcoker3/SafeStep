@@ -17,4 +17,8 @@ namespace SafeStep.Utilities
             await pageToPush.TranslateTo(0, 0, 250, Easing.Linear);
         }
     }
+    public interface INotificationService
+    {
+        void ShowNotification(string title, string message, int notificationId, DateTime notifyTime);
+    }
 }

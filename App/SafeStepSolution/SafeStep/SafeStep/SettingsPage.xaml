@@ -38,6 +38,9 @@
 
             <!-- Credits Button -->
             <Button Text="Credits" Clicked="NavigateToCredits" HorizontalOptions="Center" VerticalOptions="Center" />
+
+
+            <Button Text="Test Notifications" Clicked="ScheduleNotificationButtonClicked"  HorizontalOptions="Center" VerticalOptions="Center" />
         </StackLayout>
 
 
