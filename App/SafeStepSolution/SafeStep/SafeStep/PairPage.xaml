@@ -22,7 +22,7 @@
 
         <!-- Content -->
         <StackLayout Grid.Row="0">
-            <Label Text="Here is where you will be able to see the pair status of the shoes! WIP" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50"></Label>
+            <Label Text="Here is where you will be able to see the pair status of the shoes! WIP" HorizontalOptions="Center" VerticalOptions="Center" FontSize="50" Margin="30"></Label>
             <!-- Your current content here -->
         </StackLayout>
 

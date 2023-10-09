@@ -39,7 +39,7 @@ namespace SafeStep
         async void NavigateToCredits(object sender, EventArgs e)
         {
             NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new CreditsPage()));
+            await Navigation.PushModalAsync(new NavigationPage(new CreditsPage()), false);
         }
 
 
@@ -47,43 +47,46 @@ namespace SafeStep
         async void NavigateToSettings(object sender, EventArgs e)
         {
             NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()));
+            await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()), false);
         }
 
         // Navigate to status page.
         async void NavigateToStatus(object sender, EventArgs e)
         {
             NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new StatusPage()));
+            await Navigation.PushModalAsync(new NavigationPage(new StatusPage()), false);
         }
 
         // Navigate to Locate page.
         async void NavigateToLocate(object sender, EventArgs e)
         {
             NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new LocatePage()));
+            await Navigation.PushModalAsync(new NavigationPage(new LocatePage()), false);
         }
 
         // Navigate to settings page.
         async void NavigateToPair(object sender, EventArgs e)
         {
             NavigationPage.SetHasNavigationBar(this, false);
-            await Navigation.PushModalAsync(new NavigationPage(new PairPage()));
+            await Navigation.PushModalAsync(new NavigationPage(new PairPage()), false);
         }
         void SendNotification(System.Object sender, System.EventArgs e)
         {
             var notification = new NotificationRequest
             {
-                BadgeNumber = 1,
-                Description = "Test Description",
                 Title = "Notification",
+                Description = "Test Description",
                 ReturningData = "Dummy Data",
+                BadgeNumber = 1,
                 NotificationId = 1337,
-                NotifyTime = DateTime.Now.AddSeconds(5)
-
-
+                Schedule = new NotificationRequestSchedule
+                {
+                    NotifyTime = DateTime.Now.AddSeconds(5)
+                }
             };
-            NotificationCenter.Current.Show(notification);
+
+            LocalNotificationCenter.Current.Show(notification);
         }
+
     }
 }
