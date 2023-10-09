@@ -74,7 +74,7 @@ namespace SafeStep
             // Call the ScheduleLocalNotification method to schedule the notification.
             ScheduleLocalNotification();
         }
-        private void ScheduleLocalNotification()
+        void ScheduleLocalNotification()
         {
             // Get an instance of the notification service through DependencyService
             var notificationService = DependencyService.Get<INotificationService>();
