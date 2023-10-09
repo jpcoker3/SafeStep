@@ -1,0 +1,50 @@
+namespace SafeStepMAUI;
+
+public partial class LocatePage : ContentPage
+{
+	public LocatePage()
+	{
+
+        var displayInfo = DeviceDisplay.MainDisplayInfo;
+        var screenWidth = displayInfo.Width;
+        var screenHeight = displayInfo.Height;
+        var NavBarheight = screenHeight / 25;
+        var buttonWidth = screenWidth / 13;
+
+        Status.WidthRequest = buttonWidth;
+        Locate.WidthRequest = buttonWidth;
+        Pair.WidthRequest = buttonWidth;
+        Settings.WidthRequest = buttonWidth;
+
+        NavBar.WidthRequest = screenWidth;
+        NavBar.HeightRequest = NavBarheight;
+    }
+
+    // Navigate to settings page.
+    async void NavigateToSettings(object sender, EventArgs e)
+    {
+        NavigationPage.SetHasNavigationBar(this, false);
+        await Navigation.PushModalAsync(new NavigationPage(new SettingsPage()), false);
+    }
+
+    // Navigate to status page.
+    async void NavigateToStatus(object sender, EventArgs e)
+    {
+        NavigationPage.SetHasNavigationBar(this, false);
+        await Navigation.PushModalAsync(new NavigationPage(new StatusPage()), false);
+    }
+
+    // Navigate to Locate page.
+    async void NavigateToLocate(object sender, EventArgs e)
+    {
+        NavigationPage.SetHasNavigationBar(this, false);
+        await Navigation.PushModalAsync(new NavigationPage(new LocatePage()), false);
+    }
+
+    // Navigate to settings page.
+    async void NavigateToPair(object sender, EventArgs e)
+    {
+        NavigationPage.SetHasNavigationBar(this, false);
+        await Navigation.PushModalAsync(new NavigationPage(new PairPage()), false);
+    }
+}

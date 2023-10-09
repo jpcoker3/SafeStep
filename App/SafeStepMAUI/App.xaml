@@ -1,0 +1,19 @@
+﻿<?xml version = "1.0" encoding = "UTF-8" ?>
+<Application xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:SafeStepMAUI"
+             x:Class="SafeStepMAUI.App">
+    <Application.Resources>
+        <Style x:Key="NavigationBarIconStyle" TargetType="ImageButton">
+            <Setter Property="Aspect" Value="AspectFit" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+            <Setter Property="Padding" Value="20" />
+        </Style>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Resources/Styles/Colors.xaml" />
+                <ResourceDictionary Source="Resources/Styles/Styles.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
