@@ -1,4 +1,5 @@
-﻿using SafeStep.Utilities;
+﻿using Plugin.LocalNotification;
+using SafeStep.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -69,25 +70,20 @@ namespace SafeStep
             NavigationPage.SetHasNavigationBar(this, false);
             await Navigation.PushModalAsync(new NavigationPage(new PairPage()));
         }
-        async void ScheduleNotificationButtonClicked(object sender, EventArgs e)
+        void SendNotification(System.Object sender, System.EventArgs e)
         {
-            // Call the ScheduleLocalNotification method to schedule the notification.
-            ScheduleLocalNotification();
-        }
-        void ScheduleLocalNotification()
-        {
-            // Get an instance of the notification service through DependencyService
-            var notificationService = DependencyService.Get<INotificationService>();
+            var notification = new NotificationRequest
+            {
+                BadgeNumber = 1,
+                Description = "Test Description",
+                Title = "Notification",
+                ReturningData = "Dummy Data",
+                NotificationId = 1337,
+                NotifyTime = DateTime.Now.AddSeconds(5)
 
-            // Define notification details
-            string title = "Notification Title";
-            string message = "This is the notification message.";
-            int notificationId = 1; // A unique ID for the notification
-            DateTime notifyTime = DateTime.Now.AddSeconds(10); // Set the time when the notification should appear
 
-            // Call the ShowNotification method to schedule the notification
-            notificationService?.ShowNotification(title, message, notificationId, notifyTime);
+            };
+            NotificationCenter.Current.Show(notification);
         }
     }
-
 }
