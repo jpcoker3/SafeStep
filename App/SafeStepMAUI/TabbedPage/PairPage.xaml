@@ -14,7 +14,13 @@
             <!-- Various Settings -->
             <Label 
                 FontSize="45" 
-                Text="Pair Page, WIP"
+                Text="Connect to Shoes"
+                />
+
+            <Button
+                Text="Bluetooth Settings"
+                FontSize="45"
+                Clicked="OpenBluetoothSettings"
                 />
 
 
