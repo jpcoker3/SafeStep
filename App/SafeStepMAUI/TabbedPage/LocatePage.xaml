@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
+             xmlns:sensors="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
+             x:Class="TabbedPageSample.LocatePage">
+
+    <ScrollView>
+
+        <maps:Map 
+            x:Name="map"
+            MapType="Street"
+            IsShowingUser="True"
+            IsScrollEnabled="True"
+            IsZoomEnabled="True">
+            
+            <x:Arguments>
+                <MapSpan>
+                    <x:Arguments>
+                        <sensors:Location>
+                            <x:Arguments>
+                                <x:Double>33.4504</x:Double>
+                                <x:Double>-88.8184</x:Double>
+                            </x:Arguments>
+                        </sensors:Location>
+                        <x:Double>0.25</x:Double>
+                        <x:Double>0.25</x:Double>
+                    </x:Arguments>
+                </MapSpan>
+            </x:Arguments>
+        </maps:Map>
+        
+    </ScrollView>
+ 
+</ContentPage>

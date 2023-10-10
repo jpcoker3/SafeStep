@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       x:Class="YourNamespace.AppShell">
+
+    <!-- FlyoutItem for TabBar and Flyout Menu -->
+    <FlyoutItem Title="Main Page">
+        <ShellContent Title="Tab 1">
+            <ShellContent.ContentTemplate>
+                <DataTemplate>
+                    <local:MainPage />
+                </DataTemplate>
+            </ShellContent.ContentTemplate>
+        </ShellContent>
+        <!-- Add more ShellContent for additional tabs if needed -->
+    </FlyoutItem>
+
+</Shell>

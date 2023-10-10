@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<TabbedPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+            xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+            xmlns:local="clr-namespace:TabbedPageSample;assembly=TabbedPage"
+            xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
+            android:TabbedPage.ToolbarPlacement="Bottom"
+            x:Class="TabbedPageSample.AppTabbedPage">
+
+    <NavigationPage Title="Status" IconImageSource="{StaticResource Status}">
+        <x:Arguments>
+            <local:StatusPage Title="SafeStep" />
+        </x:Arguments>
+    </NavigationPage>
+    <NavigationPage Title="Location" IconImageSource="{StaticResource Location}">
+        <x:Arguments>
+            <local:LocatePage Title="SafeStep" />
+        </x:Arguments>
+    </NavigationPage>
+    <NavigationPage Title="Pair" IconImageSource="{StaticResource Pair}">
+        <x:Arguments>
+            <local:PairPage Title="SafeStep" />
+        </x:Arguments>
+    </NavigationPage>
+    <NavigationPage Title="Settings" IconImageSource="{StaticResource Settings}">
+        <x:Arguments>
+            <local:SettingsPage Title="SafeStep" />
+        </x:Arguments>
+    </NavigationPage>
+
+</TabbedPage>

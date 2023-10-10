@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
+             x:Class="TabbedPageSample.StatusPage">
+
+    
+    <ScrollView>
+        <VerticalStackLayout 
+            Spacing="20"
+            Padding="40,0" 
+            VerticalOptions="CenterAndExpand">
+
+            <!-- Shoe Image -->
+            <Image 
+                Source="nikeshoes_transparent.png"
+                SemanticProperties.Description="Nike Shoes"
+                HeightRequest="200"
+                HorizontalOptions="Center" />
+
+            <!-- Battery Level -->
+            <Label 
+                x:Name="batteryProgressLabel"
+                Text="Battery Level: N/A"
+                FontSize="30"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand" />
+
+            <ProgressBar 
+                x:Name="batteryProgressBar"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand" />
+            
+            
+            <!-- Decibel Rating -->
+            <Label 
+                x:Name="decibelLabel"
+                Text="Decibel Level: N/A"
+                FontSize="30"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand" />        
+
+            <ProgressBar 
+                x:Name="decibelProgressBar"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand" />
+            
+            
+            <!-- Temperature Rating -->
+            <Label 
+                x:Name="temperatureLabel"
+                Text="Temperature: N/A"
+                FontSize="30"
+                HorizontalOptions="CenterAndExpand"
+                VerticalOptions="CenterAndExpand" />
+
+            <ProgressBar 
+                x:Name="temperatureProgressBar"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="CenterAndExpand" />    
+
+
+        </VerticalStackLayout>
+    </ScrollView>
+ 
+</ContentPage>
