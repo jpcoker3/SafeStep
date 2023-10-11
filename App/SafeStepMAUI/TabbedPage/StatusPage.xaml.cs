@@ -12,7 +12,7 @@ public partial class StatusPage : ContentPage
         base.OnAppearing();
 
         // Get the current battery level and update the progress bar
-        var batteryReading = 0.88;
+        var batteryReading = 0.50;
         batteryProgressBar.Progress = batteryReading; // between 0 and 1
         batteryProgressLabel.Text = "Battery Level: " + batteryReading*100 + "%"; // copy the data from progress bar
         //control battery color

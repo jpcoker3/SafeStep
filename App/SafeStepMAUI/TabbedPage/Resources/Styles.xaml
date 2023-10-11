@@ -20,7 +20,7 @@
                FontFamily="FontAwesome"
                Size="22"
                Color="{StaticResource Primary}"
-               Glyph="{x:Static local:IconFont.Rss}"/>
+               Glyph="{x:Static local:IconFont.AddressCard}"/>
     <FontImage x:Key="Settings"
                FontFamily="FontAwesome"
                Size="22"

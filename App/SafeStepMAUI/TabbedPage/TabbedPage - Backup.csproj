@@ -38,8 +38,9 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" />
-		<MauiIcon Include="Resources\Images\safestep.png" />
+		<!--<MauiIcon Include="Resources\appicon.svg" ForegroundFile="Resources\appiconfg.svg" Color="#512BD4" /> -->
+		<MauiIcon Include="Resources\Images\safestep.png" ForegroundFile="Resources\Images\safestep.png" Color="#512BD4" />
+
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\appiconfg.svg" Color="#512BD4" BaseSize="128,128" />
@@ -53,12 +54,6 @@
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
-	</ItemGroup>
-	
-	
-
-	<ItemGroup>
-	  <MauiImage Remove="Resources\Images\safestep.png" />
 	</ItemGroup>
 	
 	

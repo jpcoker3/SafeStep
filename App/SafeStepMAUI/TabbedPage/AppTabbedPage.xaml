@@ -16,7 +16,7 @@
             <local:LocatePage Title="SafeStep" />
         </x:Arguments>
     </NavigationPage>
-    <NavigationPage Title="Pair" IconImageSource="{StaticResource Pair}">
+    <NavigationPage Title="Information" IconImageSource="{StaticResource Pair}">
         <x:Arguments>
             <local:PairPage Title="SafeStep" />
         </x:Arguments>

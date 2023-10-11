@@ -9,12 +9,20 @@
         <VerticalStackLayout 
             Spacing="20"
             Padding="40,0" 
-            VerticalOptions="CenterAndExpand">
+            VerticalOptions="CenterAndExpand"
+            >
 
             <!-- Various Settings -->
             <Label 
                 FontSize="35" 
-                Text="Settings Page, WIP"
+                Text="Settings Page"
+                HorizontalOptions="Center"
+                />
+            
+            <Label 
+                FontSize="35" 
+                Text="WIP"
+                HorizontalOptions="Center"
                 />
 
 

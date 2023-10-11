@@ -9,19 +9,38 @@
         <VerticalStackLayout 
             Spacing="20"
             Padding="40,0" 
-            VerticalOptions="CenterAndExpand">
+            VerticalOptions="Center"
+            >
 
             <!-- Various Settings -->
             <Label 
-                FontSize="45" 
-                Text="Connect to Shoes"
+                FontSize="35" 
+                Text="Last Set Contact"
+                HorizontalOptions="Center"
                 />
 
-            <Button
-                Text="Bluetooth Settings"
-                FontSize="45"
-                Clicked="OpenBluetoothSettings"
+            <Label 
+                x:Name="lastContactName"
+                Text="John Smith"
+                HorizontalOptions="Center"
                 />
+            <Label 
+                x:Name="lastContactNumber"
+                Text="+1 000 000 0000 "
+                HorizontalOptions="Center"
+                />
+            <Label 
+                x:Name="lastContactAddr"
+                Text="75 B. S. Hood Rd, Mississippi State, MS 39762"
+                HorizontalOptions="Center"
+                />
+            
+            <Button
+                Text="Change Contact Information"
+                FontSize="25"
+                Clicked="openNFCControl"
+                />
+            
 
 
 
