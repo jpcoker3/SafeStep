@@ -6,7 +6,12 @@ public partial class SettingsPage : ContentPage
 	{
 		InitializeComponent();
 	}
+	
+    private void HandleAboutButtonClicked(object sender, EventArgs e)
+    {
 
+        return;
+    }
 }
 
 

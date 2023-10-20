@@ -4,30 +4,38 @@
              xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
              x:Class="TabbedPageSample.SettingsPage">
 
-    
     <ScrollView>
-        <VerticalStackLayout 
-            Spacing="20"
-            Padding="40,0" 
-            VerticalOptions="CenterAndExpand"
-            >
+        <StackLayout Spacing="20" Padding="40,0" VerticalOptions="CenterAndExpand">
 
-            <!-- Various Settings -->
-            <Label 
-                FontSize="35" 
-                Text="Settings Page"
-                HorizontalOptions="Center"
-                />
+            <!-- App Settings Section -->
             
-            <Label 
-                FontSize="35" 
-                Text="WIP"
-                HorizontalOptions="Center"
-                />
+            <TableView>
+                <TableSection Title="Settings">
+                    <SwitchCell Text="Option 1" On="true" />
+                    <SwitchCell Text="Option 2" On="false" />
+                    <SwitchCell Text="Option 3" On="true" />
+                </TableSection>
+
+                <TableSection Title="About">
+                    <TextCell Text="Version Information"
+                    Detail="0.9.0" />
+
+                </TableSection>
+                
+                <TableSection Title="Credits">
+                    <TextCell Text="Joseph Coker" TextColor="Gray" />
+                    <TextCell Text="Emily Miller" TextColor="Gray" />
+                    <TextCell Text="Colby Stevens" TextColor="Gray" />
+                    <TextCell Text="Ryan Harper" TextColor="Gray" />
+                </TableSection>
+                
+            </TableView>
 
 
 
-        </VerticalStackLayout>
+        
+            
+
+        </StackLayout>
     </ScrollView>
- 
 </ContentPage>
