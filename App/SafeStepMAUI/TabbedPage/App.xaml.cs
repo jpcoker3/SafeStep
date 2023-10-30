@@ -6,6 +6,9 @@ public partial class App : Application
 	{
 		InitializeComponent();
 
+        // Force light theme
+        UserAppTheme = AppTheme.Light;
+        
 		MainPage = new AppTabbedPage();
 	}
 }

@@ -2,9 +2,11 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="clr-namespace:CommunityToolkit.Maui.Behaviors;assembly=CommunityToolkit.Maui"
-             x:Class="TabbedPageSample.PairPage">
+             x:Class="TabbedPageSample.PairPage"
+             x:Name="Pair"
+             BindingContext="{x:Reference Pair}">
 
-    
+
     <ScrollView>
         <VerticalStackLayout 
             Spacing="20"
@@ -34,11 +36,13 @@
                 Text="75 B. S. Hood Rd, Mississippi State, MS 39762"
                 HorizontalOptions="Center"
                 />
-            
+
             <Button
                 Text="Change Contact Information"
                 FontSize="25"
-                Clicked="openNFCControl"
+                
+                Clicked="Button_Clicked_StartWriting_Custom"
+                IsEnabled="{Binding NfcIsEnabled}"
                 />
             
 
