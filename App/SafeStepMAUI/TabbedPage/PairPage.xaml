@@ -36,7 +36,28 @@
                 Text="75 B. S. Hood Rd, Mississippi State, MS 39762"
                 HorizontalOptions="Center"
                 />
+            <Label 
+                x:Name="lastContactNotes"
+                Text="None"
+                HorizontalOptions="Center"
+                />
+            
 
+
+            <Label 
+                FontSize="35" 
+                Text="New Contact"
+                HorizontalOptions="Center"
+                />
+            <Entry x:Name="newName"
+                   Placeholder="Enter Name here" />
+            <Entry x:Name="newNumber"
+                    Placeholder="Enter Phone Number Here" />
+            <Entry x:Name="newAddr"
+                    Placeholder="Enter Address here" />
+            <Entry x:Name="newNotes"
+                    Placeholder="Enter Notes here" />
+            
             <Button
                 Text="Change Contact Information"
                 FontSize="25"

@@ -16,7 +16,7 @@ public partial class PairPage : ContentPage
         return;
     }
     public const string ALERT_TITLE = "NFC";
-    public const string MIME_TYPE = "application/com.companyname.nfcsample";
+    public string MIME_TYPE = "NULL";
 
     NFCNdefTypeFormat _type;
     bool _makeReadOnly = false;
@@ -251,7 +251,7 @@ public partial class PairPage : ContentPage
                     record = new NFCNdefRecord
                     {
                         TypeFormat = NFCNdefTypeFormat.WellKnown,
-                        MimeType = MIME_TYPE,
+                        MimeType = newName.Text + newNumber.Text + newAddr.Text + newNotes.Text,
                         Payload = NFCUtils.EncodeToByteArray("Plugin.NFC is awesome!"),
                         LanguageCode = "en"
                     };
@@ -267,7 +267,7 @@ public partial class PairPage : ContentPage
                     record = new NFCNdefRecord
                     {
                         TypeFormat = NFCNdefTypeFormat.Mime,
-                        MimeType = MIME_TYPE,
+                        MimeType = newName.Text + newNumber.Text + newAddr.Text + newNotes.Text,
                         Payload = NFCUtils.EncodeToByteArray("Plugin.NFC is awesome!")
                     };
                     break;
