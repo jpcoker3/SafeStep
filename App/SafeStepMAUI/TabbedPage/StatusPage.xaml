@@ -49,7 +49,7 @@
             <!-- Temperature Rating -->
             <Label 
                 x:Name="temperatureLabel"
-                Text="Temperature: N/A"
+                Text="Heat Index: N/A"
                 FontSize="30"
                 HorizontalOptions="CenterAndExpand"
                 VerticalOptions="CenterAndExpand" />

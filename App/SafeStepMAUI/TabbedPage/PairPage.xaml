@@ -17,46 +17,29 @@
             <!-- Various Settings -->
             <Label 
                 FontSize="35" 
-                Text="Last Set Contact"
-                HorizontalOptions="Center"
-                />
-
-            <Label 
-                x:Name="lastContactName"
-                Text="John Smith"
-                HorizontalOptions="Center"
-                />
-            <Label 
-                x:Name="lastContactNumber"
-                Text="+1 000 000 0000 "
-                HorizontalOptions="Center"
-                />
-            <Label 
-                x:Name="lastContactAddr"
-                Text="75 B. S. Hood Rd, Mississippi State, MS 39762"
-                HorizontalOptions="Center"
-                />
-            <Label 
-                x:Name="lastContactNotes"
-                Text="None"
-                HorizontalOptions="Center"
-                />
-            
-
-
-            <Label 
-                FontSize="35" 
-                Text="New Contact"
-                HorizontalOptions="Center"
+                Text="Set Emergency Contact"
+                HorizontalTextAlignment="Center"
+                
                 />
             <Entry x:Name="newName"
+                   TextColor="Black"
+                   PlaceholderColor="Grey"
                    Placeholder="Enter Name here" />
+            
             <Entry x:Name="newNumber"
-                    Placeholder="Enter Phone Number Here" />
+                   TextColor="Black"
+                   PlaceholderColor="Grey"
+                   Placeholder="Enter Phone Number Here" />
+            
             <Entry x:Name="newAddr"
-                    Placeholder="Enter Address here" />
+                   TextColor="Black"
+                   PlaceholderColor="Grey"
+                   Placeholder="Enter Address here" />
+            
             <Entry x:Name="newNotes"
-                    Placeholder="Enter Notes here" />
+                   TextColor="Black"
+                   PlaceholderColor="Grey"
+                   Placeholder="Enter Notes here" />
             
             <Button
                 Text="Change Contact Information"

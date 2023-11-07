@@ -4,7 +4,8 @@
             xmlns:local="clr-namespace:TabbedPageSample;assembly=TabbedPage"
             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
             android:TabbedPage.ToolbarPlacement="Bottom"
-            x:Class="TabbedPageSample.AppTabbedPage">
+            x:Class="TabbedPageSample.AppTabbedPage"
+            android:TabbedPage.IsSwipePagingEnabled="False">
 
     <NavigationPage Title="Status" IconImageSource="{StaticResource Status}">
         <x:Arguments>

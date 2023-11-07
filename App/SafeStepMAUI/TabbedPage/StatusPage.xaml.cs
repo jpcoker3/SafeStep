@@ -13,6 +13,8 @@ public partial class StatusPage : ContentPage
 
         // Get the current battery level and update the progress bar
         var batteryReading = 0.50;
+
+
         batteryProgressBar.Progress = batteryReading; // between 0 and 1
         batteryProgressLabel.Text = "Battery Level: " + batteryReading*100 + "%"; // copy the data from progress bar
         //control battery color
@@ -35,9 +37,9 @@ public partial class StatusPage : ContentPage
         //get current decibel reading
         var decibelReading = 75;
         //Decibel reading betweel 60 -120 dB. 
-        var decibelProgress = Math.Round(((float)decibelReading - 20) / 120, 2);
+        var decibelProgress = Math.Round((float)decibelReading, 2);
 
-        decibelProgressBar.Progress = (double)decibelProgress; // 120 is max decibels. 
+        decibelProgressBar.Progress = (double)decibelProgress/120; // 120 is max decibels. 
         decibelLabel.Text = "Decibel Level: " + decibelReading + " db"; // describe current decibels
 
         if (decibelProgress >= 0.85)
@@ -54,20 +56,20 @@ public partial class StatusPage : ContentPage
         }
 
         // Get current Temperature Rating
-        var tempReading = 72;
+        var tempReading = 76;
 
         //we want a range from 65-75 on avg. we will expand to 55-85 for general purposes. 
         // number - 55: brings avg from 0 - 30. 
-        //so (number -55)/30 should give us a range between 0-1 for the range 55-85.
-        var tempProgress = Math.Round(((float)tempReading - 55) / 30, 2);
+        //so (number -55)/30 should give us a range between 0-1 for the range 0 - 120.
+        var tempProgress = Math.Round(((float)tempReading/120), 2);
         temperatureProgressBar.Progress = (double)tempProgress;
-        temperatureLabel.Text = "Temperature: " + tempReading + "°F";
+        temperatureLabel.Text = "Heat Index: " + tempReading + "°F";
 
-        if (tempProgress > 0.75)
+        if (tempProgress > 0.80)
         {
             temperatureProgressBar.ProgressColor = Colors.Red;
         }
-        else if (tempProgress > 0.25)
+        else if (tempProgress > 0.60)
         {
             temperatureProgressBar.ProgressColor = Colors.Green;
         }

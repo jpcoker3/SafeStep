@@ -3,9 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:maps="clr-namespace:Microsoft.Maui.Controls.Maps;assembly=Microsoft.Maui.Controls.Maps"
              xmlns:sensors="clr-namespace:Microsoft.Maui.Devices.Sensors;assembly=Microsoft.Maui.Essentials"
-             x:Class="TabbedPageSample.LocatePage">
+             x:Class="TabbedPageSample.LocatePage"
+             >
 
-    <ScrollView>
+    <ContentView>
 
         <maps:Map 
             x:Name="map"
@@ -18,18 +19,32 @@
                 <MapSpan>
                     <x:Arguments>
                         <sensors:Location>
+                            
                             <x:Arguments>
-                                <x:Double>33.4504</x:Double>
-                                <x:Double>-88.8184</x:Double>
+                                <x:Double>33.4525</x:Double>
+                                <x:Double>-88.7884</x:Double>
                             </x:Arguments>
                         </sensors:Location>
-                        <x:Double>0.25</x:Double>
-                        <x:Double>0.25</x:Double>
+                        <x:Double>0.025</x:Double>
+                        <x:Double>0.025</x:Double>
                     </x:Arguments>
                 </MapSpan>
             </x:Arguments>
+            <!-- Add pin with SafeStep Location-->
+            <maps:Map.Pins>
+                <maps:Pin Label="SafeStep" Type="Place">
+                    <maps:Pin.Location>
+                        <sensors:Location>
+                            <x:Arguments>
+                                <x:Double>33.4525</x:Double>
+                                <x:Double>-88.7974</x:Double>
+                            </x:Arguments>
+                        </sensors:Location>
+                    </maps:Pin.Location>
+                </maps:Pin>
+            </maps:Map.Pins>
         </maps:Map>
         
-    </ScrollView>
+    </ContentView>
  
 </ContentPage>
