@@ -10,40 +10,77 @@ Authors are:
 
 #include "Adafruit_Sensor.h"
 #include "Adafruit_AM2320.h"
+#include <Adafruit_GPS.h>
 
+
+//INITIALIZING SENSOR PINS
+//Temp & Humidity Sensor
 Adafruit_AM2320 am2320 = Adafruit_AM2320();
+//Decibel Sensor
+int sound_sensor = 3;
+boolean val = 0;
+//GPS
+#define GPSSerial Serial2
 
-//initializing sensor pins
-int sound_sensor = A2;
 
 void setup() {
   Serial.begin(9600);
+  pinMode(sound_sensor, INPUT);
+  
   while (!Serial) {
     delay(10); // hang out until serial port opens
   }
 
   am2320.begin();
+  GPSSerial.begin(9600);
 }
 
 void loop() {
   //temp_humidity();
-  decibel_sensor();
+  //decibel_sensor();
 }
 
 void temp_humidity(){
-  float f_temp = ((am2320.readTemperature()) * (1.8)) + 32;
+  double f_temp = ((am2320.readTemperature()) * (1.8)) + 32;
+  double hum_RH = am2320.readHumidity();
   Serial.print("Temp: "); Serial.print(f_temp); Serial.println(" F");
-  Serial.print("Hum: "); Serial.print(am2320.readHumidity()); Serial.println(" %RH");
+  Serial.print("Hum: "); Serial.print(hum_RH); Serial.println(" %RH");
 
+  Serial.print("Heat Index: ");Serial.println(calculateHeatIndex(f_temp, hum_RH));
   delay(2000);
 }
 
-void decibel_sensor(){
-  float decibel_level = 20 * log10(analogRead(sound_sensor));
-  Serial.println(analogRead(sound_sensor));
+//used to test the decibel cap which will turn the digital output to HIGH
+void test_decibel(){
+  int test_sensor = A2;
+  float decibel_level = 20 * log10(analogRead(test_sensor));
+  Serial.println(decibel_level);
   delay(500);
 }
 
+void decibel_sensor(){
+  val =digitalRead(sound_sensor);
+  Serial.println (val);
+  // when the sensor detects a signal above the threshold value, LED flashes
+  if (val==HIGH) {
+    Serial.println("Caution: Loud Noise");
+  }
+  else {
+    Serial.println("Safe level of Noise");
+  }
+ 
+}
+
+void GPS(){
+  if (Serial.available()) {
+    char c = Serial.read();
+    GPSSerial.write(c);
+  }
+  if (GPSSerial.available()) {
+    char c = GPSSerial.read();
+    Serial.write(c);
+  }
+}
 
 double calculateHeatIndex(double temperatureF, double humidity) {
   // Returns the Heat Index based on the temperature in Farenheight and Humidity
