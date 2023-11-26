@@ -40,15 +40,46 @@
                    TextColor="Black"
                    PlaceholderColor="Grey"
                    Placeholder="Enter Notes here" />
-            
-            <Button
-                Text="Change Contact Information"
-                FontSize="25"
+
+            <!-- LED indicator and Button -->
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
                 
-                Clicked="Button_Clicked_StartWriting_Custom"
-                IsEnabled="{Binding NfcIsEnabled}"
-                />
-            
+
+                <!-- Container for the button with a fixed width -->
+                <Grid WidthRequest="250">
+                    <!-- Adjust the width as needed -->
+                    <Button
+                        Text="Change Contact Information"
+                        FontSize="25"
+                        Clicked="Button_Clicked_StartWriting_Custom"
+                        IsEnabled="{Binding NfcIsEnabled}"
+                        HorizontalOptions="Center"
+                    />
+                </Grid>
+
+                <!-- LED indicator - Frame as a circle -->
+                <Frame
+                    WidthRequest="20"
+                    HeightRequest="20"
+                    CornerRadius="10"
+                    
+                    Padding="0"
+                    Margin="25"
+                    >
+                                    <!-- BoxView as the actual circle -->
+                   <BoxView
+                        x:Name="statusLED"
+                        WidthRequest="20"
+                        HeightRequest="20"
+                        CornerRadius="10"
+                        Color="{Binding NFCIndicatorColor}"
+                        Margin="0"
+                        HorizontalOptions="FillAndExpand"
+                        VerticalOptions="FillAndExpand"/>
+                </Frame>
+            </StackLayout>
+
+
 
 
 

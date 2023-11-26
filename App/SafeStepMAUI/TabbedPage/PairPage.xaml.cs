@@ -3,12 +3,14 @@
 using Plugin.NFC;
 using System.Text;
 
+
 public partial class PairPage : ContentPage
 {
 	public PairPage()
 	{
 		InitializeComponent();
-	}
+        NFCStatus(false);
+    }
 
     private void openNFCControl(object sender, EventArgs e)
     {
@@ -222,6 +224,7 @@ public partial class PairPage : ContentPage
                 await ShowAlert("Formatting tag operation successful");
             else
                 await ShowAlert("Writing tag operation successful");
+            NFCStatus(false);
         }
         catch (Exception ex)
         {
@@ -251,8 +254,8 @@ public partial class PairPage : ContentPage
                     record = new NFCNdefRecord
                     {
                         TypeFormat = NFCNdefTypeFormat.WellKnown,
-                        MimeType = newName.Text + newNumber.Text + newAddr.Text + newNotes.Text,
-                        Payload = NFCUtils.EncodeToByteArray("Plugin.NFC is awesome!"),
+                        MimeType = ("Name: " + newName.Text + "\n" + "Phone Number: " + newNumber.Text + "\n" + "Addr: " + newAddr.Text + "\n" + "Notes: " + newNotes.Text),
+                        Payload = NFCUtils.EncodeToByteArray("SafeStep"),
                         LanguageCode = "en"
                     };
                     break;
@@ -267,8 +270,8 @@ public partial class PairPage : ContentPage
                     record = new NFCNdefRecord
                     {
                         TypeFormat = NFCNdefTypeFormat.Mime,
-                        MimeType = newName.Text + newNumber.Text + newAddr.Text + newNotes.Text,
-                        Payload = NFCUtils.EncodeToByteArray("Plugin.NFC is awesome!")
+                        MimeType = ("Name: " + newName.Text + "\n" + "Phone Number: " + newNumber.Text + "\n" + "Addr: " + newAddr.Text + "\n" + "Notes: " + newNotes.Text),
+                        Payload = NFCUtils.EncodeToByteArray("SafeStep")
                     };
                     break;
                 default:
@@ -293,21 +296,44 @@ public partial class PairPage : ContentPage
         }
     }
 
+    public bool IsNFCReady;
+
+    async void NFCStatus(bool isNFCReady)
+    {
+        if(isNFCReady == true)
+        {
+            statusLED.Color = Color.FromArgb("00FF00");
+        }
+        else
+        {
+            statusLED.Color = Color.FromArgb("800000");
+        }
+    }
+
 
     /// <summary>
     /// Start publish operation to write the tag (CUSTOM) when <see cref="Current_OnTagDiscovered(ITagInfo, bool)"/> event will be raised
     /// </summary>
     /// <param name="sender"></param>
     /// <param name="e"></param>
-    async void Button_Clicked_StartWriting_Custom(object sender, System.EventArgs e) => await Publish(NFCNdefTypeFormat.Mime);
+    async void Button_Clicked_StartWriting_Custom(object sender, System.EventArgs e)
+    {
+        // Inside the method where NFC readiness is determined
+        NFCStatus(true);
+
+        await Publish(NFCNdefTypeFormat.Mime);
+        
+
+}
 
 
-    /// <summary>
-    /// Task to publish data to the tag
-    /// </summary>
-    /// <param name="type"><see cref="NFCNdefTypeFormat"/></param>
-    /// <returns>The task to be performed</returns>
-    async Task Publish(NFCNdefTypeFormat? type = null)
+
+/// <summary>
+/// Task to publish data to the tag
+/// </summary>
+/// <param name="type"><see cref="NFCNdefTypeFormat"/></param>
+/// <returns>The task to be performed</returns>
+async Task Publish(NFCNdefTypeFormat? type = null)
     {
         await StartListeningIfNotiOS();
         try
@@ -318,11 +344,16 @@ public partial class PairPage : ContentPage
 
             if (type.HasValue) _type = type.Value;
             CrossNFC.Current.StartPublishing(!type.HasValue);
+            
+
+
         }
         catch (Exception ex)
         {
             await ShowAlert(ex.Message);
         }
+        
+
     }
 
     /// <summary>
@@ -359,7 +390,7 @@ public partial class PairPage : ContentPage
     /// <param name="message">Message to be displayed</param>
     /// <param name="title">Alert title</param>
     /// <returns>The task to be performed</returns>
-    Task ShowAlert(string message, string title = null) => DisplayAlert(string.IsNullOrWhiteSpace(title) ? ALERT_TITLE : title, message, "OK");
+    Task ShowAlert(string message, string title = null) => DisplayAlert(string.IsNullOrWhiteSpace(title) ? ALERT_TITLE : title, message, "OK"); 
 
     /// <summary>
     /// Task to start listening for NFC tags if the user's device platform is not iOS
