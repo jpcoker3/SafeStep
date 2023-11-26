@@ -1,14 +1,12 @@
-# SafetyShoes
-
-# Make sure to check if you need to pull changes before working. 
+# SafeStep
 
 ## App Design
-Do NOT update any packages within the app unless you know what you are doing. it may break it. 
+The app has been created using .NET MAUI, and features GPS location tracking, as well as environmental alerts.
 
 ## Hardware Design
-Make sure to test all major code changes before committing. 
+All Sensors were chosen and programmed by Emily Miller. 
 
 ## Website Design 
-Can be edited [here](https://github.com/jpcoker3/jpcoker3.github.io)
+The website for the SafeStep can be found [here](https://jpcoker3.github.io)
 
-and can be viewed [here](https://jpcoker3.github.io)
+## Gallery
