@@ -7,19 +7,40 @@ using System.Threading;
 using System.Diagnostics;
 using Plugin.BLE;
 using Plugin.BLE.Abstractions.Contracts;
+using Microsoft.Maui.Controls;
 namespace TabbedPageSample;
 public partial class StatusPage : ContentPage
 {
-    private readonly IBluetoothLE _bluetooth;
-    private readonly IAdapter _adapter;
+    private Random random;
+    private System.Threading.Timer updateTimer;
+
+    //private readonly IBluetoothLE _bluetooth;
+    //private readonly IAdapter _adapter;
     public StatusPage()
 	{
 		InitializeComponent();
 
-        _bluetooth = CrossBluetoothLE.Current;
-        _adapter = CrossBluetoothLE.Current.Adapter;
+        random = new Random();
+        updateTimer = new System.Threading.Timer(OnTimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));
+
+
+        //_bluetooth = CrossBluetoothLE.Current;
+        //_adapter = CrossBluetoothLE.Current.Adapter;
 
     }
+
+
+    private void OnTimerCallback(object state)
+    {
+        MainThread.BeginInvokeOnMainThread(() =>
+        {
+            // Update values with random readings within specified ranges
+            setDecibel(random.Next(60, 110)); // Range: 60 - 120 dB
+            setBatteryLevel(random.NextDouble()); // Range: 0.0 - 1.0
+            setTemperature(random.Next(55, 86)); // Range: 55 - 85°F
+        });
+    }
+
 
     protected override void OnAppearing()
     {
@@ -41,14 +62,14 @@ public partial class StatusPage : ContentPage
         //Decibel reading between 60 -120 dB. 
         var decibelProgress = Math.Round((float)decibelReading, 2);
 
-        decibelProgressBar.Progress = (double)decibelProgress / 120; // 120 is max decibels. 
+        decibelProgressBar.Progress = (double)decibelProgress / 100; // 120 is max decibels. 
         decibelLabel.Text = "Decibel Level: " + decibelReading + " db"; // describe current decibels
 
-        if (decibelProgress >= 0.85)
+        if (decibelProgress >= 85)
         {
             decibelProgressBar.ProgressColor = Colors.Red;
         }
-        else if (decibelProgress > 0.25)
+        else if (decibelProgress > 25)
         {
             decibelProgressBar.ProgressColor = Colors.Green;
         }
@@ -62,10 +83,8 @@ public partial class StatusPage : ContentPage
     public void setTemperature(float tempReading) // any int
     {
 
-        //we want a range from 65-75 on avg. we will expand to 55-85 for general purposes. 
-        // number - 55: brings avg from 0 - 30. 
         //so (number -55)/30 should give us a range between 0-1 for the range 0 - 120.
-        var tempProgress = Math.Round(((float)tempReading / 120), 2);
+        var tempProgress = Math.Round(((float)tempReading / 100), 2);
         temperatureProgressBar.Progress = (double)tempProgress;
         temperatureLabel.Text = "Heat Index: " + tempReading + "°F";
 
@@ -88,7 +107,7 @@ public partial class StatusPage : ContentPage
     {
 
         batteryProgressBar.Progress = batteryReading; // between 0 and 1
-        batteryProgressLabel.Text = "Battery Level: " + batteryReading * 100 + "%"; // copy the data from progress bar
+        batteryProgressLabel.Text = "Battery Level: " + Math.Round(batteryReading * 100,0) + "%"; // copy the data from progress bar
         //control battery color
         if (batteryReading > 0.75)
         {
@@ -104,7 +123,7 @@ public partial class StatusPage : ContentPage
         }
     }
 
-
+    /*
     public async Task StartScanning()
     {
         _adapter.DeviceDiscovered += (s, a) =>
@@ -140,7 +159,7 @@ public partial class StatusPage : ContentPage
             }
         }
     }
-
+    */
 
     /*
     private void ReceiveData()
