@@ -62,7 +62,7 @@
             <Button
                 Text="Refresh"
                 FontSize="25"
-                Clicked="OnConnectClicked"
+                
                 HorizontalOptions="Center"
             />
 

@@ -2,7 +2,11 @@
 using Android.Content;
 using Android.Content.PM;
 using Android.OS;
+using Android.Runtime;
 using Plugin.NFC;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
 
 namespace TabbedPageSample;
 
@@ -15,6 +19,9 @@ public class MainActivity : MauiAppCompatActivity
         CrossNFC.Init(this);
 
         base.OnCreate(savedInstanceState);
+
+
+
     }
 
     protected override void OnResume()
@@ -32,4 +39,6 @@ public class MainActivity : MauiAppCompatActivity
         // Plugin NFC: Tag Discovery Interception
         CrossNFC.OnNewIntent(intent);
     }
+
+
 }

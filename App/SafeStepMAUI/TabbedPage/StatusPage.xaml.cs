@@ -4,22 +4,22 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading;
-using InTheHand.Net.Bluetooth;
-using InTheHand.Net.Sockets;
 using System.Diagnostics;
-
+using Plugin.BLE;
+using Plugin.BLE.Abstractions.Contracts;
 namespace TabbedPageSample;
 public partial class StatusPage : ContentPage
 {
-    BluetoothClient client = new BluetoothClient();
-    BluetoothDeviceInfo device = null;
-    Stream stream = null;
+    private readonly IBluetoothLE _bluetooth;
+    private readonly IAdapter _adapter;
     public StatusPage()
 	{
 		InitializeComponent();
-        client = new BluetoothClient();
 
-	}
+        _bluetooth = CrossBluetoothLE.Current;
+        _adapter = CrossBluetoothLE.Current.Adapter;
+
+    }
 
     protected override void OnAppearing()
     {
@@ -105,68 +105,44 @@ public partial class StatusPage : ContentPage
     }
 
 
-    protected override void OnDisappearing()
+    public async Task StartScanning()
     {
-        if (stream is not null)
+        _adapter.DeviceDiscovered += (s, a) =>
         {
-            stream.Dispose();
-            stream = null;
-        }
+            Debug.WriteLine($"Device found: {a.Device.Name}");
+            // Handle discovered device here
+        };
 
-        base.OnDisappearing();
+        await _adapter.StartScanningForDevicesAsync();
+    }
+    public async Task ConnectToDevice(Guid deviceId)
+    {
+        var device = await _adapter.ConnectToKnownDeviceAsync(deviceId);
+        // Handle connected device here
     }
 
-    private async Task StreamLoop()
+    public async Task ReadCharacteristic(Guid serviceId, Guid characteristicId)
     {
-        byte[] buffer = new byte[1024];
-
-        while (client.Connected)
+        var connectedDevices = _adapter.ConnectedDevices;
+        if (connectedDevices != null && connectedDevices.Any())
         {
-            int readBytes = await stream.ReadAsync(buffer, 0, 80);
-            var text = System.Text.Encoding.ASCII.GetString(buffer, 0, readBytes);
-            var split = text.Split('\r');
-            foreach (string line in split)
-            {
-                Debug.WriteLine(line);
-                if (device != null)
-                {
-                    client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
+            var device = connectedDevices.FirstOrDefault(); // Assuming you have a connected device
 
-                    // Start a new thread for data reception after connection
-                    Thread receiveThread = new Thread(ReceiveData);
-                    receiveThread.IsBackground = true;
-                    receiveThread.Start();
-                }
-                else
+            var service = await device.GetServiceAsync(serviceId);
+            if (service != null)
+            {
+                var characteristic = await service.GetCharacteristicAsync(characteristicId);
+                if (characteristic != null)
                 {
-                    // Handle device not found or connection failure
+                    var bytes = await characteristic.ReadAsync();
+                    // Handle read data here
                 }
             }
         }
     }
-    private async void OnConnectClicked(object sender, EventArgs e)
-    {
-        var picker = new BluetoothDevicePicker();
-        picker.ClassOfDevices.Add(new ClassOfDevice(DeviceClass.AudioVideoUnclassified, ServiceClass.Audio));
-        device = await picker.PickSingleDeviceAsync();
 
-        if (device != null)
-        {
-            if (!device.Authenticated)
-            {
-                bool paired = BluetoothSecurity.PairRequest(device.DeviceAddress, null);
-                await Task.Delay(1000);
-            }
 
-            client.Connect(device.DeviceAddress, BluetoothService.Handsfree);
-            if (client.Connected)
-            {
-                stream = client.GetStream();
-                StreamReader reader = new StreamReader(stream, System.Text.Encoding.ASCII);
-                await Task.Run(StreamLoop);
-            }
-        }
-    }
+    /*
     private void ReceiveData()
     {
         var stream = client.GetStream();
@@ -230,7 +206,8 @@ public partial class StatusPage : ContentPage
         }
 
     }
-           
+    */
+
 }
 
 
