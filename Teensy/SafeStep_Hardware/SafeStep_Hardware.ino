@@ -70,13 +70,16 @@ void setup() {
 }
 
 void loop() {
+  sendBTData(temp_humidity(), serial_decibel(),GPS_data(), fall_detection());
+
+  delay(15_000); //15s delay
+
   //Serial.print("The code is running \n");
   //fall_detection();
   //temp_humidity();
-  sendBTData(temp_humidity());
   //decibel_sensor();
   //GPS_data();
-  //test_decibel();
+  //serial_decibel();
 }
 
 String temp_humidity(){
@@ -93,15 +96,18 @@ String temp_humidity(){
 }
 
 //used to test the decibel cap which will turn the digital output to HIGH
-void test_decibel(){
+String serial_decibel(){
   int test_sensor = A3;
-  float decibel_level = 20 * log10(analogRead(test_sensor));
+  //was previously a float
+  double decibel_level = 20 * log10(analogRead(test_sensor));
   Serial.println(decibel_level);
-  delay(500);
+  
+  return conversion(decibel_level)
 }
 
-double decibel_sensor(){
-  val =digitalRead(sound_sensor);
+// obsolete ATM
+String decibel_sensor(){
+  val = digitalRead(sound_sensor);
   Serial.println (val);
   // when the sensor detects a signal above the threshold value, LED flashes
   if (val==HIGH) {
@@ -110,7 +116,7 @@ double decibel_sensor(){
   else {
     Serial.println("Safe level of Noise");
   }
- return 0;
+ return val;
 }
 
 double GPS_data(){
@@ -124,13 +130,15 @@ double GPS_data(){
       Serial.println(GPS.longitude, 6);
 
       Serial.print("Altitude: ");
-      Serial.println(GPS.altitude);    
+      Serial.println(GPS.altitude);    // dont need altitude for directions
     }
-    return 0;
+    //return lat long, rounded to 8 instead of using the conversion for higher accuracy
+    String coords[] = {String(GPS.latitude, 8), String(GPS.longitude, 8)}
+    return coords; // round these to however long the coords are
 }
 
 String conversion(double value){
-  return String(value, 2);
+  return String(value, 4);
 }
  
 bool fall_detection(){
@@ -224,12 +232,31 @@ double calculateHeatIndex(double temperatureF, double humidity) {
     return HI;
 }
 
-int sendBTData(String message){
+int sendBTData(String humidity, String decibel, String coords[], bool fallen){
+
+  String message = ""
+  
+  // add humidity
+  message += "hum:"+humidity+","
+  // add decibel
+  message += "dec:"+decibel+","
+  // add coords
+  message += "coords:"+coords[0] +"x" coords[1]+","
+  // if fallen or not
+  if(fallen){
+    message += "fall:true"
+  }else{
+    message += "fall:false"
+  }
+
+  // message = hum:72.22,dec:66.66,coords:58.54684654x54.682134987,fall:false
+  // this string can be parsed by the app. 
+  
+
   Serial.print(message);
   mySerial.print(message);
   
   
-  delay(10);
   return 0;
 }
 
