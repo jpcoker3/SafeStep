@@ -73,6 +73,7 @@
 
 	<ItemGroup>
 	  <PackageReference Include="CommunityToolkit.Maui" Version="6.0.0" />
+	  <PackageReference Include="InTheHand.Net.Bluetooth" Version="4.1.40" />
 	  <PackageReference Include="Microsoft.Maui.Controls.Maps" Version="7.0.92" />
 	  <PackageReference Include="Microsoft.Maui.Maps" Version="7.0.92" />
 	  <PackageReference Include="Plugin.NFC" Version="0.1.26" />
