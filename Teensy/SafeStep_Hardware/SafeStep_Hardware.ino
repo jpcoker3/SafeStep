@@ -1,4 +1,4 @@
-/*
+  /*
 This is the main .ino file to be used with the Safe Step senior design project.
 
 Authors are:
@@ -71,13 +71,12 @@ void setup() {
 
 void loop() {
   //Serial.print("The code is running \n");
-  fall_detection();
-  temp_humidity();
+  //fall_detection();
+  //temp_humidity();
   sendBTData(temp_humidity());
-  //sendBTData("<3 earl ");
   //decibel_sensor();
   //GPS_data();
-  test_decibel();
+  //test_decibel();
 }
 
 String temp_humidity(){
@@ -115,27 +114,19 @@ double decibel_sensor(){
 }
 
 double GPS_data(){
-  Serial.println(GPS.read());
-  if (GPS.newNMEAreceived()) {
-    // a tricky thing here is if we print the NMEA sentence, or data
-    // we end up not listening and catching other sentences!
-    // so be very wary if using OUTPUT_ALLDATA and trying to print out data
-    Serial.print(GPS.lastNMEA()); // this also sets the newNMEAreceived() flag to false
-    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
-      return; // we can fail to parse a sentence in which case we should just wait for another
-  }
-  if (GPS.fix) {
-      Serial.print("Location: ");
-      Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);
-      Serial.print(", ");
-      Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
-      Serial.print("Speed (knots): "); Serial.println(GPS.speed);
-      Serial.print("Angle: "); Serial.println(GPS.angle);
-      Serial.print("Altitude: "); Serial.println(GPS.altitude);
-      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
-      Serial.print("Antenna status: "); Serial.println((int)GPS.antenna);
+  if (GPSSerial.available()) {
+    char c = GPSSerial.read();
+    // If a new valid sentence is received, print the data
+      Serial.print("Latitude: ");
+      Serial.println(GPS.latitude, 6);
+
+      Serial.print("Longitude: ");
+      Serial.println(GPS.longitude, 6);
+
+      Serial.print("Altitude: ");
+      Serial.println(GPS.altitude);    
     }
-  return 0.00;
+    return 0;
 }
 
 String conversion(double value){
@@ -233,17 +224,11 @@ double calculateHeatIndex(double temperatureF, double humidity) {
     return HI;
 }
 
-
 int sendBTData(String message){
   Serial.print(message);
+  mySerial.print(message);
   
-  if(Serial.available()) 
-  {
-    mySerial.write(message);//Forward what Serial received to Software Serial Port
-  }
   
-
- 
   delay(10);
   return 0;
 }
