@@ -57,7 +57,14 @@
             <ProgressBar 
                 x:Name="temperatureProgressBar"
                 HorizontalOptions="FillAndExpand"
-                VerticalOptions="CenterAndExpand" />    
+                VerticalOptions="CenterAndExpand" />
+
+            <Button
+                Text="Refresh"
+                FontSize="25"
+                Clicked="OnConnectClicked"
+                HorizontalOptions="Center"
+            />
 
 
         </VerticalStackLayout>

@@ -6,12 +6,15 @@ using System.Text;
 using System.Threading;
 using InTheHand.Net.Bluetooth;
 using InTheHand.Net.Sockets;
+using System.Diagnostics;
 
 namespace TabbedPageSample;
 public partial class StatusPage : ContentPage
 {
-    private BluetoothClient client;
-	public StatusPage()
+    BluetoothClient client = new BluetoothClient();
+    BluetoothDeviceInfo device = null;
+    Stream stream = null;
+    public StatusPage()
 	{
 		InitializeComponent();
         client = new BluetoothClient();
@@ -21,12 +24,13 @@ public partial class StatusPage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
         setDecibel(75);
         setBatteryLevel(0.50);
         setTemperature(85);
 
         // Initiate Bluetooth connection
-        ConnectBluetooth();
+        //ConnectBluetooth();
 
 
 
@@ -100,38 +104,69 @@ public partial class StatusPage : ContentPage
         }
     }
 
-    private void ConnectBluetooth()
+
+    protected override void OnDisappearing()
     {
-        // Discover and connect to the Bluetooth device
-        BluetoothDeviceInfo[] devices = (BluetoothDeviceInfo[])client.DiscoverDevices();
-
-        BluetoothDeviceInfo device = null;
-
-        foreach (BluetoothDeviceInfo obj in devices)
+        if (stream is not null)
         {
-            if (obj.DeviceName != null && obj.DeviceName.Contains("HC-05"))
-            {
-                // You can select the device based on its name, address, or any other criteria
-                device = obj;
-            }
+            stream.Dispose();
+            stream = null;
         }
 
+        base.OnDisappearing();
+    }
+
+    private async Task StreamLoop()
+    {
+        byte[] buffer = new byte[1024];
+
+        while (client.Connected)
+        {
+            int readBytes = await stream.ReadAsync(buffer, 0, 80);
+            var text = System.Text.Encoding.ASCII.GetString(buffer, 0, readBytes);
+            var split = text.Split('\r');
+            foreach (string line in split)
+            {
+                Debug.WriteLine(line);
+                if (device != null)
+                {
+                    client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
+
+                    // Start a new thread for data reception after connection
+                    Thread receiveThread = new Thread(ReceiveData);
+                    receiveThread.IsBackground = true;
+                    receiveThread.Start();
+                }
+                else
+                {
+                    // Handle device not found or connection failure
+                }
+            }
+        }
+    }
+    private async void OnConnectClicked(object sender, EventArgs e)
+    {
+        var picker = new BluetoothDevicePicker();
+        picker.ClassOfDevices.Add(new ClassOfDevice(DeviceClass.AudioVideoUnclassified, ServiceClass.Audio));
+        device = await picker.PickSingleDeviceAsync();
 
         if (device != null)
         {
-            client.Connect(device.DeviceAddress, BluetoothService.SerialPort);
+            if (!device.Authenticated)
+            {
+                bool paired = BluetoothSecurity.PairRequest(device.DeviceAddress, null);
+                await Task.Delay(1000);
+            }
 
-            // Start a new thread for data reception after connection
-            Thread receiveThread = new Thread(ReceiveData);
-            receiveThread.IsBackground = true;
-            receiveThread.Start();
-        }
-        else
-        {
-            // Handle device not found or connection failure
+            client.Connect(device.DeviceAddress, BluetoothService.Handsfree);
+            if (client.Connected)
+            {
+                stream = client.GetStream();
+                StreamReader reader = new StreamReader(stream, System.Text.Encoding.ASCII);
+                await Task.Run(StreamLoop);
+            }
         }
     }
-
     private void ReceiveData()
     {
         var stream = client.GetStream();
@@ -143,7 +178,7 @@ public partial class StatusPage : ContentPage
             var readMessage = "";
             do
             {
-                
+
                 int bytesRead = stream.Read(receive, 0, receive.Length);
                 readMessage += Encoding.ASCII.GetString(receive, 0, bytesRead);
             }
@@ -193,8 +228,9 @@ public partial class StatusPage : ContentPage
             }
 
         }
-    }
 
+    }
+           
 }
 
 

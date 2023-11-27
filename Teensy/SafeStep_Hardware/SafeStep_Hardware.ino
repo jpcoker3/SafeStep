@@ -233,7 +233,7 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 }
 
 int sendBTData(String humidity, String decibel, String coords[], bool fallen){
-
+  
   String message = ""
   
   // add humidity
