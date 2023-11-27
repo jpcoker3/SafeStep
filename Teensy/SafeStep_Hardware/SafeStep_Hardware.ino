@@ -6,61 +6,102 @@ Authors are:
     Emily Miller
     Colby Stevens
     Ryan Harper
-
-    test test
 */
 
+#include <Wire.h>
+#include <Adafruit_MMA8451.h>
 #include "Adafruit_Sensor.h"
 #include "Adafruit_AM2320.h"
 #include <Adafruit_GPS.h>
+#include <stdio.h>
+#include <string>
+//#include <SoftwareSerial.h>
+
+
+
+//Create software serial object to communicate with HC-05 Bluetooth Module
+#define mySerial Serial1 //HC-05 Tx & Rx is connected to Arduino #3 & #2
 
 
 //INITIALIZING SENSOR PINS
 //Temp & Humidity Sensor
-Adafruit_AM2320 am2320 = Adafruit_AM2320();
+Adafruit_AM2320 am2320 = Adafruit_AM2320(&Wire2);
+
 //Decibel Sensor
-int sound_sensor = 3;
+int sound_sensor = A3;
 boolean val = 0;
+
 //GPS
 #define GPSSerial Serial2
+Adafruit_GPS GPS(&GPSSerial);
+
+//Accelerometer
+Adafruit_MMA8451 mma = Adafruit_MMA8451(&Wire1);
 
 
-void setup() {
+void setup() {  
+  //Begin serial communication with Arduino and Arduino IDE (Serial Monitor)
   Serial.begin(9600);
-  pinMode(sound_sensor, INPUT);
-  
-  while (!Serial) {
-    delay(10); // hang out until serial port opens
-  }
 
+  //Begin serial communication with Arduino and HC-05
+  mySerial.begin(9600);
+
+
+  //pinMode(sound_sensor, INPUT);
+ // Serial.println("The setup has been done");
+  //while (!Serial) {
+    //delay(10); // hang out until serial port opens
+  //}
+  //setting up temp & humidity sensor
   am2320.begin();
-  GPSSerial.begin(9600);
+  
+  //setting up GPS
+  GPSSerial.begin(115200);
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  GPS.sendCommand(PGCMD_ANTENNA);
+  
+  Serial.begin(9600);
+  
+  mma.begin();
+  mma.setRange(MMA8451_RANGE_2_G);
+  //Serial.print("Range = "); Serial.print(2 << mma.getRange());  
+  //Serial.println("G");
 }
 
 void loop() {
-  //temp_humidity();
+  //Serial.print("The code is running \n");
+  fall_detection();
+  temp_humidity();
+  sendBTData(temp_humidity());
+  //sendBTData("<3 earl ");
   //decibel_sensor();
+  //GPS_data();
+  test_decibel();
 }
 
-void temp_humidity(){
+String temp_humidity(){
   double f_temp = ((am2320.readTemperature()) * (1.8)) + 32;
   double hum_RH = am2320.readHumidity();
   Serial.print("Temp: "); Serial.print(f_temp); Serial.println(" F");
   Serial.print("Hum: "); Serial.print(hum_RH); Serial.println(" %RH");
-
-  Serial.print("Heat Index: ");Serial.println(calculateHeatIndex(f_temp, hum_RH));
+  double heat_index = calculateHeatIndex(f_temp, hum_RH);
+  Serial.print("Heat Index: ");Serial.println(heat_index);
   delay(2000);
+  heat_index = round(heat_index * 1000)/1000;
+
+   return conversion(heat_index);
 }
 
 //used to test the decibel cap which will turn the digital output to HIGH
 void test_decibel(){
-  int test_sensor = A2;
+  int test_sensor = A3;
   float decibel_level = 20 * log10(analogRead(test_sensor));
   Serial.println(decibel_level);
   delay(500);
 }
 
-void decibel_sensor(){
+double decibel_sensor(){
   val =digitalRead(sound_sensor);
   Serial.println (val);
   // when the sensor detects a signal above the threshold value, LED flashes
@@ -70,18 +111,90 @@ void decibel_sensor(){
   else {
     Serial.println("Safe level of Noise");
   }
- 
+ return 0;
 }
 
-void GPS(){
-  if (Serial.available()) {
-    char c = Serial.read();
-    GPSSerial.write(c);
+double GPS_data(){
+  Serial.println(GPS.read());
+  if (GPS.newNMEAreceived()) {
+    // a tricky thing here is if we print the NMEA sentence, or data
+    // we end up not listening and catching other sentences!
+    // so be very wary if using OUTPUT_ALLDATA and trying to print out data
+    Serial.print(GPS.lastNMEA()); // this also sets the newNMEAreceived() flag to false
+    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag to false
+      return; // we can fail to parse a sentence in which case we should just wait for another
   }
-  if (GPSSerial.available()) {
-    char c = GPSSerial.read();
-    Serial.write(c);
-  }
+  if (GPS.fix) {
+      Serial.print("Location: ");
+      Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);
+      Serial.print(", ");
+      Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
+      Serial.print("Speed (knots): "); Serial.println(GPS.speed);
+      Serial.print("Angle: "); Serial.println(GPS.angle);
+      Serial.print("Altitude: "); Serial.println(GPS.altitude);
+      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
+      Serial.print("Antenna status: "); Serial.println((int)GPS.antenna);
+    }
+  return 0.00;
+}
+
+String conversion(double value){
+  return String(value, 2);
+}
+ 
+bool fall_detection(){
+  // Read the 'raw' data in 14-bit counts
+  
+  mma.read();
+  //Serial.println("I'm in fall_detection");
+  Serial.print("X:\t"); Serial.print(mma.x); 
+  Serial.print("\tY:\t"); Serial.print(mma.y); 
+  Serial.print("\tZ:\t"); Serial.print(mma.z); 
+  Serial.println();
+  
+
+  /* Get a new sensor event */ 
+  sensors_event_t event; 
+  mma.getEvent(&event);
+
+  /* Display the results (acceleration is measured in m/s^2) */
+  Serial.print("X: \t"); Serial.print(event.acceleration.x); Serial.print("\t");
+  Serial.print("Y: \t"); Serial.print(event.acceleration.y); Serial.print("\t");
+  Serial.print("Z: \t"); Serial.print(event.acceleration.z); Serial.print("\t");
+  Serial.println("m/s^2 ");
+  
+  /* Get the orientation of the sensor */
+  uint8_t o = mma.getOrientation();
+  switch (o) {
+    case MMA8451_PL_PUF: 
+      Serial.println("Portrait Up Front");
+      break;
+    case MMA8451_PL_PUB: 
+      Serial.println("Portrait Up Back");
+      break;    
+    case MMA8451_PL_PDF: 
+      Serial.println("Portrait Down Front");
+      break;
+    case MMA8451_PL_PDB: 
+      Serial.println("Portrait Down Back");
+      break;
+    case MMA8451_PL_LRF: 
+      Serial.println("Landscape Right Front");
+      break;
+    case MMA8451_PL_LRB: 
+      Serial.println("Landscape Right Back");
+      break;
+    case MMA8451_PL_LLF: 
+      Serial.println("Landscape Left Front");
+      break;
+    case MMA8451_PL_LLB: 
+      Serial.println("Landscape Left Back");
+      break;
+    }
+    delay(50);
+
+
+    return false;
 }
 
 double calculateHeatIndex(double temperatureF, double humidity) {
@@ -119,3 +232,22 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 
     return HI;
 }
+
+
+int sendBTData(String message){
+  Serial.print(message);
+  
+  if(Serial.available()) 
+  {
+    mySerial.write(message);//Forward what Serial received to Software Serial Port
+  }
+  
+
+ 
+  delay(10);
+  return 0;
+}
+
+
+
+

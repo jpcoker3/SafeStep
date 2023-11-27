@@ -14,6 +14,7 @@ Authors are:
 #include "Adafruit_AM2320.h"
 #include <Adafruit_GPS.h>
 #include <stdio.h>
+#include <string>
 //#include <SoftwareSerial.h>
 
 
@@ -72,7 +73,8 @@ void loop() {
   //Serial.print("The code is running \n");
   fall_detection();
   temp_humidity();
-  //sendBTData("FUNCTION HERE");
+  sendBTData(temp_humidity());
+  //sendBTData("<3 earl ");
   //decibel_sensor();
   //GPS_data();
   test_decibel();
@@ -137,9 +139,7 @@ double GPS_data(){
 }
 
 String conversion(double value){
-  char data[50];
-  snprintf(data, sizeof(data), "%lf", value);
-  return String(data);
+  return String(value, 2);
 }
  
 bool fall_detection(){
@@ -236,18 +236,12 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 
 int sendBTData(String message){
   Serial.print(message);
-  int len = (sizeof(message)/sizeof(message[0]));
-  for (int i = 0; i < len ; i++){
-    mySerial.write(message[i]);
-  }
-  /*
+  
   if(Serial.available()) 
   {
     mySerial.write(message);//Forward what Serial received to Software Serial Port
   }
-  */
-
- 
+  
   delay(10);
   return 0;
 }
