@@ -22,7 +22,7 @@
             <Label 
                 x:Name="batteryProgressLabel"
                 Text="Battery Level: N/A"
-                FontSize="30"
+                FontSize="25"
                 HorizontalOptions="CenterAndExpand"
                 VerticalOptions="CenterAndExpand" />
 
@@ -36,7 +36,7 @@
             <Label 
                 x:Name="decibelLabel"
                 Text="Decibel Level: N/A"
-                FontSize="30"
+                FontSize="25"
                 HorizontalOptions="CenterAndExpand"
                 VerticalOptions="CenterAndExpand" />        
 
@@ -50,7 +50,7 @@
             <Label 
                 x:Name="temperatureLabel"
                 Text="Heat Index: N/A"
-                FontSize="30"
+                FontSize="25"
                 HorizontalOptions="CenterAndExpand"
                 VerticalOptions="CenterAndExpand" />
 
@@ -58,13 +58,6 @@
                 x:Name="temperatureProgressBar"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="CenterAndExpand" />
-
-            <Button
-                Text="Refresh"
-                FontSize="25"
-                
-                HorizontalOptions="Center"
-            />
 
 
         </VerticalStackLayout>
