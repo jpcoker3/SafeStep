@@ -56,10 +56,10 @@ void setup() {
   am2320.begin();
   
   //setting up GPS
-  GPSSerial.begin(115200);
-  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-  GPS.sendCommand(PGCMD_ANTENNA);
+  GPSSerial.begin(9600);
+  //GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  //GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+  //GPS.sendCommand(PGCMD_ANTENNA);
   
   Serial.begin(9600);
   
@@ -70,7 +70,7 @@ void setup() {
 }
 
 void loop() {
-  sendBTData(temp_humidity(), serial_decibel(),GPS_data(), fall_detection());
+  sendBTData(temp_humidity(), serial_decibel(),["0.00", "0.00"], fall_detection());
 
   delay(15_000); //15s delay
 
@@ -102,7 +102,7 @@ String serial_decibel(){
   double decibel_level = 20 * log10(analogRead(test_sensor));
   Serial.println(decibel_level);
   
-  return conversion(decibel_level)
+  return conversion(decibel_level);
 }
 
 // obsolete ATM
@@ -119,22 +119,18 @@ String decibel_sensor(){
  return val;
 }
 
-double GPS_data(){
+String GPS_data(){
+
+   if (Serial.available()) {
+    char c = Serial.read();
+    GPSSerial.write(c);
+  }
   if (GPSSerial.available()) {
     char c = GPSSerial.read();
-    // If a new valid sentence is received, print the data
-      Serial.print("Latitude: ");
-      Serial.println(GPS.latitude, 6);
-
-      Serial.print("Longitude: ");
-      Serial.println(GPS.longitude, 6);
-
-      Serial.print("Altitude: ");
-      Serial.println(GPS.altitude);    // dont need altitude for directions
-    }
+  }
     //return lat long, rounded to 8 instead of using the conversion for higher accuracy
-    String coords[] = {String(GPS.latitude, 8), String(GPS.longitude, 8)}
-    return coords; // round these to however long the coords are
+    //String coords[] = {String(GPS.latitude, 8), String(GPS.longitude, 8)};
+    return " "; // round these to however long the coords are
 }
 
 String conversion(double value){
@@ -234,19 +230,19 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 
 int sendBTData(String humidity, String decibel, String coords[], bool fallen){
   
-  String message = ""
+  String message = "";
   
   // add humidity
-  message += "hum:"+humidity+","
+  message += "hum:"+humidity+",";
   // add decibel
-  message += "dec:"+decibel+","
+  message += "dec:"+decibel+",";
   // add coords
-  message += "coords:"+coords[0] +"x" coords[1]+","
+  message += "coords:"+coords[0] +"x" +coords[1]+",";
   // if fallen or not
   if(fallen){
-    message += "fall:true"
+    message += "fall:true";
   }else{
-    message += "fall:false"
+    message += "fall:false";
   }
 
   // message = hum:72.22,dec:66.66,coords:58.54684654x54.682134987,fall:false
