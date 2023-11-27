@@ -30,6 +30,8 @@ int test_sensor = A16;
 //GPS
 #define GPSSerial Serial2
 Adafruit_GPS GPS(&GPSSerial);
+#define GPSECHO true
+uint32_t timer = millis();
 
 //Accelerometer
 Adafruit_MMA8451 mma = Adafruit_MMA8451(&Wire1);
@@ -43,6 +45,10 @@ void setup() {
   am2320.begin();
   //Startup up GPS
   GPSSerial.begin(9600);
+  GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ);
+  GPS.sendCommand(PGCMD_ANTENNA);
+
   //Startup accelerometer  
   mma.begin();
   mma.setRange(MMA8451_RANGE_2_G);
@@ -55,6 +61,7 @@ void loop() {
   sendBTData(test_decibel());
   GPS_data();
   test_decibel();
+  delay(1000);
 }
 
 String temp_humidity(){
@@ -102,33 +109,115 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 //used to test the decibel cap which will turn the digital output to HIGH
 String test_decibel(){
   float decibel_level = 20 * log10(analogRead(test_sensor));
-  String audio = decibel_sensor(decibel_level);
-  delay(1000);
-  return audio;
-}
-
-String decibel_sensor(double val){
   
-  Serial.println(val);
-  // sensor detects a signal above the threshold value
-  if (val>=60) {
+  if (decibel_level>=60) {
     Serial.println("Caution: Loud Noise");
     return "Caution: Loud Noise";
   }
   else {
     Serial.println("Safe level of Noise");
-    return "";
+    return "WORKING";
   }
+  delay(1000);
 }
 
 double GPS_data(){
-  if (Serial.available()) {
-    char c = Serial.read();
-    GPSSerial.write(c);
+  // read data from the GPS in the 'main loop'
+  char c = GPS.read();
+  // if you want to debug, this is a good time to do it!
+  if (GPSECHO)
+    if (c)
+      Serial.print(c);
+  // if a sentence is received, we can check the checksum, parse it...
+  if (GPS.newNMEAreceived()) {
+    // a tricky thing here is if we print the NMEA sentence, or data
+    // we end up not listening and catching other sentences!
+    // so be very wary if using OUTPUT_ALLDATA and trytng to print out data
+    // Serial.println(GPS.lastNMEA()); // this also sets the newNMEAreceived()
+    // flag to false
+    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag
+                                    // to false
+      return; // we can fail to parse a sentence in which case we should just
+              // wait for another
   }
-  if (GPSSerial.available()) {
-    char c = GPSSerial.read();
-    Serial.println(c);
+
+  // approximately every 2 seconds or so, random intervals, print out the
+  // current stats
+  static unsigned nextInterval = 2000;
+  if (millis() - timer > nextInterval) {
+    timer = millis(); // reset the timer
+    nextInterval = 1500 + random(1000);
+    // Time in seconds keeps increasing after we get the NMEA sentence.
+    // This estimate will lag real time due to transmission and parsing delays,
+    // but the lag should be small and should also be consistent.
+    float s = GPS.seconds + GPS.milliseconds / 1000. + GPS.secondsSinceTime();
+    int m = GPS.minute;
+    int h = GPS.hour;
+    int d = GPS.day;
+    // Adjust time and day forward to account for elapsed time.
+    // This will break at month boundaries!!! Humans will have to cope with
+    // April 31,32 etc.
+    while (s > 60) {
+      s -= 60;
+      m++;
+    }
+    while (m > 60) {
+      m -= 60;
+      h++;
+    }
+    while (h > 24) {
+      h -= 24;
+      d++;
+    }
+    // ISO Standard Date Format, with leading zeros https://xkcd.com/1179/
+    Serial.print("\nDate: ");
+    Serial.print(GPS.year + 2000, DEC);
+    Serial.print("-");
+    if (GPS.month < 10)
+      Serial.print("0");
+    Serial.print(GPS.month, DEC);
+    Serial.print("-");
+    if (d < 10)
+      Serial.print("0");
+    Serial.print(d, DEC);
+    Serial.print("   Time: ");
+    if (h < 10)
+      Serial.print("0");
+    Serial.print(h, DEC);
+    Serial.print(':');
+    if (m < 10)
+      Serial.print("0");
+    Serial.print(m, DEC);
+    Serial.print(':');
+    if (s < 10)
+      Serial.print("0");
+    Serial.println(s, 3);
+    Serial.print("Fix: ");
+    Serial.print((int)GPS.fix);
+    Serial.print(" quality: ");
+    Serial.println((int)GPS.fixquality);
+    Serial.print("Time [s] since last fix: ");
+    Serial.println(GPS.secondsSinceFix(), 3);
+    Serial.print("    since last GPS time: ");
+    Serial.println(GPS.secondsSinceTime(), 3);
+    Serial.print("    since last GPS date: ");
+    Serial.println(GPS.secondsSinceDate(), 3);
+    if (GPS.fix) {
+      Serial.print("Location: ");
+      Serial.print(GPS.latitude, 4);
+      Serial.print(GPS.lat);
+      Serial.print(", ");
+      Serial.print(GPS.longitude, 4);
+      Serial.println(GPS.lon);
+      Serial.print("Speed (knots): ");
+      Serial.println(GPS.speed);
+      Serial.print("Angle: ");
+      Serial.println(GPS.angle);
+      Serial.print("Altitude: ");
+      Serial.println(GPS.altitude);
+      Serial.print("Satellites: ");
+      Serial.println((int)GPS.satellites);
+    }
   }
   return 0;
 }
