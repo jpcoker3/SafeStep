@@ -14,7 +14,15 @@
 	<!-- Required to read/write data to NFC -->
 	<uses-permission android:name="android.permission.NFC" />
 	<uses-feature android:name="android.hardware.nfc" android:required="true" />
-	
+
+	<!-- Required to access the user's bluetooth devices -->
+	<uses-permission android:name="android.permission.BLUETOOTH" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+
+	<uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+	<uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+	<uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+	<uses-feature android:name="android.hardware.bluetooth_le" android:required="true"/>
 	
 	
 </manifest>
