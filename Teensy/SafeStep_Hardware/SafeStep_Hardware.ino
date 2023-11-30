@@ -13,13 +13,32 @@ Authors are:
 #include "Adafruit_AM2320.h"
 #include <Adafruit_GPS.h>
 #include <stdio.h>
+#include <SoftwareSerial.h>
 #include <string>
+
+
+// THERMISTOR SETUP
+// which analog pin to connect
+#define THERMISTORPIN A14      
+// resistance at 25 degrees C
+#define THERMISTORNOMINAL 10000      
+// temp. for nominal resistance (almost always 25 C)
+#define TEMPERATURENOMINAL 25   
+// how many samples to take and average, more takes longer
+// but is more 'smooth'
+#define NUMSAMPLES 5
+// The beta coefficient of the thermistor (usually 3000-4000)
+#define BCOEFFICIENT 3950
+// the value of the 'other' resistor
+#define SERIESRESISTOR 10000    
+
+int samples[NUMSAMPLES];
 
 
 
 //INITIALIZING SENSOR PINS
 //Bluetooth Sensor (HC=05)
-#define mySerial Serial1 //HC-05 Tx & Rx is connected to Arduino #3 & #2
+SoftwareSerial mySerial(0, 1); //HC-05 Tx & Rx is connected to Arduino #3 & #2
 
 //Temp & Humidity Sensor
 Adafruit_AM2320 am2320 = Adafruit_AM2320(&Wire2);
@@ -28,13 +47,13 @@ Adafruit_AM2320 am2320 = Adafruit_AM2320(&Wire2);
 int test_sensor = A16;
 
 //GPS
-#define GPSSerial Serial2
+SoftwareSerial GPSSerial(8,7);
 Adafruit_GPS GPS(&GPSSerial);
 #define GPSECHO true
 uint32_t timer = millis();
 
 //Accelerometer
-Adafruit_MMA8451 mma = Adafruit_MMA8451(&Wire1);
+Adafruit_MMA8451 mma = Adafruit_MMA8451();//&Wire1
 
 void setup() {  
   //Begin serial communication with Arduino and Arduino IDE (Serial Monitor)
@@ -46,22 +65,38 @@ void setup() {
   //Startup up GPS
   GPSSerial.begin(9600);
   GPS.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_100_MILLIHERTZ);
+  GPS.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
   GPS.sendCommand(PGCMD_ANTENNA);
 
   //Startup accelerometer  
-  mma.begin();
+  if (! mma.begin()) {
+    Serial.println("Couldnt start");
+    while (1);
+  }
   mma.setRange(MMA8451_RANGE_2_G);
+
+  Serial.println("Setting up ...");
 }
 
+int i = 0;
 void loop() {
+  Serial.println(i);
+  i += 1;
+
+
+
   //Serial.print("The code is running \n");
-  fall_detection();
+  //fall_detection();
   //temp_humidity();
-  sendBTData(test_decibel());
-  GPS_data();
-  test_decibel();
-  delay(1000);
+  //ThermTemp();
+  //GPS_data();
+  //decibel_read()
+
+  //make the string to send
+  String send = "Fall: " + fall_detection() + ",Temp:"+ ThermTemp() + ", " +GPS_data()+", Noise: "+decibel_read();
+  
+  sendBTData(send);
+  delay(1500);
 }
 
 String temp_humidity(){
@@ -71,9 +106,8 @@ String temp_humidity(){
   Serial.print("Hum: "); Serial.print(hum_RH); Serial.println(" %RH");
   double heat_index = calculateHeatIndex(f_temp, hum_RH);
   Serial.print("Heat Index: ");Serial.println(heat_index);
-  delay(2000);
   heat_index = round(heat_index * 1000)/1000;
-   return conversion(heat_index);
+  return conversion(heat_index);
 }
 
 double calculateHeatIndex(double temperatureF, double humidity) {
@@ -107,9 +141,11 @@ double calculateHeatIndex(double temperatureF, double humidity) {
 }
 
 //used to test the decibel cap which will turn the digital output to HIGH
-String test_decibel(){
+String decibel_read(){
   float decibel_level = 20 * log10(analogRead(test_sensor));
-  
+  Serial.println(decibel_level);
+  return conversion(decibel_level);
+/*
   if (decibel_level>=60) {
     Serial.println("Caution: Loud Noise");
     return "Caution: Loud Noise";
@@ -118,120 +154,51 @@ String test_decibel(){
     Serial.println("Safe level of Noise");
     return "WORKING";
   }
-  delay(1000);
+  */
+  
 }
 
-double GPS_data(){
-  // read data from the GPS in the 'main loop'
+String GPS_data(){
   char c = GPS.read();
   // if you want to debug, this is a good time to do it!
-  if (GPSECHO)
-    if (c)
-      Serial.print(c);
+  if ((c) && (GPSECHO))
+    Serial.write(c);
+
   // if a sentence is received, we can check the checksum, parse it...
   if (GPS.newNMEAreceived()) {
     // a tricky thing here is if we print the NMEA sentence, or data
     // we end up not listening and catching other sentences!
     // so be very wary if using OUTPUT_ALLDATA and trytng to print out data
-    // Serial.println(GPS.lastNMEA()); // this also sets the newNMEAreceived()
-    // flag to false
-    if (!GPS.parse(GPS.lastNMEA())) // this also sets the newNMEAreceived() flag
-                                    // to false
-      return; // we can fail to parse a sentence in which case we should just
-              // wait for another
+    //Serial.println(GPS.lastNMEA());   // this also sets the newNMEAreceived() flag to false
+
+    if (!GPS.parse(GPS.lastNMEA()))   // this also sets the newNMEAreceived() flag to false
+      return;  // we can fail to parse a sentence in which case we should just wait for another
   }
 
-  // approximately every 2 seconds or so, random intervals, print out the
-  // current stats
-  static unsigned nextInterval = 2000;
-  if (millis() - timer > nextInterval) {
+  // approximately every 2 seconds or so, print out the current stats
+  if (millis() - timer > 2000) {
     timer = millis(); // reset the timer
-    nextInterval = 1500 + random(1000);
-    // Time in seconds keeps increasing after we get the NMEA sentence.
-    // This estimate will lag real time due to transmission and parsing delays,
-    // but the lag should be small and should also be consistent.
-    float s = GPS.seconds + GPS.milliseconds / 1000. + GPS.secondsSinceTime();
-    int m = GPS.minute;
-    int h = GPS.hour;
-    int d = GPS.day;
-    // Adjust time and day forward to account for elapsed time.
-    // This will break at month boundaries!!! Humans will have to cope with
-    // April 31,32 etc.
-    while (s > 60) {
-      s -= 60;
-      m++;
-    }
-    while (m > 60) {
-      m -= 60;
-      h++;
-    }
-    while (h > 24) {
-      h -= 24;
-      d++;
-    }
-    // ISO Standard Date Format, with leading zeros https://xkcd.com/1179/
-    Serial.print("\nDate: ");
-    Serial.print(GPS.year + 2000, DEC);
-    Serial.print("-");
-    if (GPS.month < 10)
-      Serial.print("0");
-    Serial.print(GPS.month, DEC);
-    Serial.print("-");
-    if (d < 10)
-      Serial.print("0");
-    Serial.print(d, DEC);
-    Serial.print("   Time: ");
-    if (h < 10)
-      Serial.print("0");
-    Serial.print(h, DEC);
-    Serial.print(':');
-    if (m < 10)
-      Serial.print("0");
-    Serial.print(m, DEC);
-    Serial.print(':');
-    if (s < 10)
-      Serial.print("0");
-    Serial.println(s, 3);
-    Serial.print("Fix: ");
-    Serial.print((int)GPS.fix);
-    Serial.print(" quality: ");
-    Serial.println((int)GPS.fixquality);
-    Serial.print("Time [s] since last fix: ");
-    Serial.println(GPS.secondsSinceFix(), 3);
-    Serial.print("    since last GPS time: ");
-    Serial.println(GPS.secondsSinceTime(), 3);
-    Serial.print("    since last GPS date: ");
-    Serial.println(GPS.secondsSinceDate(), 3);
+
+    Serial.print("GPS Fix: "); Serial.print((int)GPS.fix);
+    Serial.print(" quality: "); Serial.println((int)GPS.fixquality);
     if (GPS.fix) {
       Serial.print("Location: ");
-      Serial.print(GPS.latitude, 4);
-      Serial.print(GPS.lat);
+      Serial.print(GPS.latitude, 4); Serial.print(GPS.lat);
       Serial.print(", ");
-      Serial.print(GPS.longitude, 4);
-      Serial.println(GPS.lon);
-      Serial.print("Speed (knots): ");
-      Serial.println(GPS.speed);
-      Serial.print("Angle: ");
-      Serial.println(GPS.angle);
-      Serial.print("Altitude: ");
-      Serial.println(GPS.altitude);
-      Serial.print("Satellites: ");
-      Serial.println((int)GPS.satellites);
+      Serial.print(GPS.longitude, 4); Serial.println(GPS.lon);
+
+      Serial.print("Speed (knots): "); Serial.println(GPS.speed);
+      Serial.print("Angle: "); Serial.println(GPS.angle);
+      Serial.print("Altitude: "); Serial.println(GPS.altitude);
+      Serial.print("Satellites: "); Serial.println((int)GPS.satellites);
+      Serial.print("Antenna status: "); Serial.println((int)GPS.antenna);
     }
   }
-  return 0;
+  return String("GPS Fix: " + String((int)GPS.fix));
 }
 
  
 String fall_detection(){
-  // Read the 'raw' data in 14-bit counts
-  mma.read();
-  
-  //Serial.println("I'm in fall_detection");
-  Serial.print("X:\t"); Serial.print(mma.x); 
-  Serial.print("\tY:\t"); Serial.print(mma.y); 
-  Serial.print("\tZ:\t"); Serial.print(mma.z); 
-  Serial.println();
   
   /* Get a new sensor event */ 
   sensors_event_t event; 
@@ -248,14 +215,16 @@ String fall_detection(){
        event.acceleration.z * event.acceleration.z);
 
   // Check for a fall (you may need to adjust the threshold)
-  if (acceleration > 10.0) {
-    return"Fall detected!";
+  Serial.println("Acceleration: " + String(acceleration,2));
+  if (acceleration > 15.0) {
+    Serial.println("Fall Detected");
+    return "Fall detected!";
     // Add your fall detection logic or alert mechanism here
   }else{
-    return "";
+    Serial.println("No Fall Detected");
+    return "No Fall Detected";
   }
 
-  delay(50);
 }
 
 String conversion(double value){
@@ -263,8 +232,50 @@ String conversion(double value){
 }
 
 int sendBTData(String message){
-  Serial.print(message);
-  mySerial.print(message);
-  delay(10);
+  Serial.print("BT Message:" + message);
+  mySerial.print("\n" + message);
+
   return 0;
+}
+
+String ThermTemp(){
+  uint8_t i;
+  float average;
+
+  // take N samples in a row, with a slight delay
+  for (i=0; i< NUMSAMPLES; i++) {
+   samples[i] = analogRead(THERMISTORPIN);
+   delay(10);
+  }
+  
+  // average all the samples out
+  average = 0;
+  for (i=0; i< NUMSAMPLES; i++) {
+     average += samples[i];
+       //Serial.print("analog reading "); 
+      //Serial.println(samples[i]);
+  }
+  average /= NUMSAMPLES;
+
+  //Serial.print("Average analog reading "); 
+  //Serial.println(average);
+  
+  // convert the value to resistance
+  average = 1023 / (average - 1);
+  average = SERIESRESISTOR / average;
+  //Serial.print("Thermistor resistance "); 
+  //Serial.println(average);
+  
+  float steinhart;
+  steinhart = average / THERMISTORNOMINAL;     // (R/Ro)
+  steinhart = log(steinhart);                  // ln(R/Ro)
+  steinhart /= BCOEFFICIENT;                   // 1/B * ln(R/Ro)
+  steinhart += 1.0 / (TEMPERATURENOMINAL + 273.15); // + (1/To)
+  steinhart = 1.0 / steinhart;                 // Invert
+  steinhart -= 273.15;                         // convert absolute temp to C
+  
+  float faren = steinhart * (9/5) + 32;
+  
+  Serial.println("Temperature:" + conversion(faren));
+  return conversion(faren);
 }
